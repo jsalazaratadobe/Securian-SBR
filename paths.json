@@ -1,16 +1,16 @@
 {
   "mappings": [
-    "/content/wknd-universal/language-masters/en:/",
-    "/content/wknd-universal/language-masters/en/:/",
-    "/content/wknd-universal/language-masters/en/:/en/",
-    "/content/wknd-universal/configuration:/.helix/config.json",
-    "/content/wknd-universal/metadata:/metadata.json",
-    "/content/wknd-universal/redirects:/redirects.json",
-    "/content/wknd-universal/placeholders:/placeholders.json",
-    "/content/wknd-universal.resource/language-masters/en/query-index.json:/en/query-index.json"
+    "/content/securian/language-masters/en:/",
+    "/content/securian/language-masters/en/:/",
+    "/content/securian/language-masters/en/:/en/",
+    "/content/securian/configuration:/.helix/config.json",
+    "/content/securian/metadata:/metadata.json",
+    "/content/securian/redirects:/redirects.json",
+    "/content/securian/placeholders:/placeholders.json",
+    "/content/securian.resource/language-masters/en/query-index.json:/en/query-index.json"
   ],
   "includes": [
-    "/content/wknd-universal/",
-    "/content/dam/wknd-universal/"
+    "/content/securian/",
+    "/content/dam/securian/"
   ]
 }
