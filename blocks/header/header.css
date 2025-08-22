@@ -515,11 +515,10 @@ header nav .nav-tools .icon-search-light {
   margin-top: 0;
 }
 
-/* optional: remove underline hover effect if present */
-header nav .nav
-/* Logo size fix */
+/* Fix for tiny logo size in nav */
 header .nav-brand img {
-width: 10vw;
-max-width: 200px;
-  height: auto;
+  width: 160px !important;
+  max-width: none !important;
+  height: auto !important;
+  object-fit: contain;
 }
