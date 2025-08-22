@@ -3,14 +3,36 @@ export default function decorate(block) {
   const contentWrapper = document.createElement('div');
   contentWrapper.className = 'primary-cta-content';
 
-  // Move all text content into the content wrapper
+  let ctaText = '';
+  let ctaHref = '';
+
+  // Move all non-image content into the content wrapper
   [...block.children].forEach((row) => {
+    const link = row.querySelector('a');
+
     if (!row.querySelector('img')) {
       contentWrapper.appendChild(row);
+
+      // Check if this row contains a link
+      if (link) {
+        ctaHref = link.getAttribute('href');
+        ctaText = row.textContent.trim();
+      }
     }
   });
 
-  // If image exists, wrap it in a background div
+  // Build CTA button if we have text and link
+  if (ctaText && ctaHref) {
+    const button = document.createElement('a');
+    button.className = 'cta-button';
+    button.href = ctaHref;
+    button.textContent = ctaText;
+    button.setAttribute('role', 'button');
+
+    contentWrapper.appendChild(button);
+  }
+
+  // Wrap the image if it exists
   if (image) {
     const background = document.createElement('div');
     background.className = 'primary-cta-background';

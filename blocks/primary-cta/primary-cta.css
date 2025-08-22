@@ -65,3 +65,19 @@
   font-weight: bold;
   display: inline-block;
 }
+
+.cta-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 12px 24px;
+  background-color: #0077c8; /* Securian blue */
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #005ea8;
+}
