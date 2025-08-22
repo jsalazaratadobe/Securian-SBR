@@ -1,0 +1,27 @@
+.primary-cta {
+  background-image: var(--bg-img);
+  background-size: cover;
+  background-position: center;
+  padding: 60px 20px;
+  color: #fff;
+  text-align: center;
+}
+
+.primary-cta .panel {
+  max-width: 800px;
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.6); /* contrast layer */
+  padding: 30px;
+  border-radius: 12px;
+}
+
+.primary-cta .button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #00a6a0; /* adjust to brand */
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
