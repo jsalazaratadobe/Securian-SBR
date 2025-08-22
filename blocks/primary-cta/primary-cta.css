@@ -66,7 +66,7 @@
   display: inline-block;
 }
 
-.cta-button {
+.primary-cta .cta-button {
   display: inline-block;
   margin-top: 1rem;
   padding: 12px 24px;
@@ -78,6 +78,6 @@
   transition: background-color 0.3s ease;
 }
 
-.cta-button:hover {
+.primary-cta .cta-button:hover {
   background-color: #005ea8;
 }
