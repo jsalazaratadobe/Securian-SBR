@@ -519,7 +519,7 @@ header nav .nav-tools .icon-search-light {
 header nav .nav
 /* Logo size fix */
 header .nav-brand img {
-  width: 160px;
-  max-width: unset;
+width: 10vw;
+max-width: 200px;
   height: auto;
 }
