@@ -6,17 +6,19 @@ export default function decorate(block) {
   let ctaText = '';
   let ctaHref = '';
 
-  [...block.children].forEach((row) => {
+  const rows = Array.from(block.children); // ✅ Convert live collection to static array
+
+  rows.forEach((row) => {
     const link = row.querySelector('a');
     const input = row.querySelector('input');
 
     if (!row.querySelector('img')) {
       if (link) {
         ctaHref = link.getAttribute('href');
-        row.remove(); // ✅ Remove the row with the raw link
+        row.remove(); // ✅ Remove raw link row
       } else if (input) {
         ctaText = input.value.trim();
-        row.remove(); // ✅ Remove the row with the input box
+        row.remove(); // ✅ Remove input row
       } else {
         contentWrapper.appendChild(row);
       }
