@@ -1,25 +1,24 @@
-export default function decorate(block) {
-  block.classList.add('primary-cta');
+const primaryCta = document.getElementById('primary-cta');
 
-  const title = block.querySelector('h1, h2, h3');
-  if (title) title.classList.add('primary-cta-title');
+const ctaData = {
+  imageUrl: 'https://your.cdn.com/path-to-image.jpg',
+  title: 'Financial wellness tips – in your inbox',
+  body: 'Receive monthly emails to help keep your finances in shape.',
+  buttonText: 'Sign up today',
+  buttonUrl: '/signup'
+};
 
-  const body = block.querySelector('p');
-  if (body) body.classList.add('primary-cta-body');
+// Set background image dynamically
+primaryCta.style.backgroundImage = `url('${ctaData.imageUrl}')`;
+primaryCta.style.backgroundPosition = 'right center';
+primaryCta.style.backgroundRepeat = 'no-repeat';
+primaryCta.style.backgroundSize = 'cover';
 
-  const button = block.querySelector('a');
-  if (button) button.classList.add('primary-cta-button');
-
-  // Get image (last child)
-  const img = block.querySelector('picture img');
-  if (img) {
-    block.style.backgroundImage = `url(${img.src})`;
-    img.closest('div').remove(); // remove image from DOM
-  }
-
-  // Wrap text content in a container
-  const contentWrapper = document.createElement('div');
-  contentWrapper.classList.add('primary-cta-content');
-  [...block.children].forEach(child => contentWrapper.appendChild(child));
-  block.appendChild(contentWrapper);
-}
+// Inject the rest of the content
+primaryCta.innerHTML = `
+  <div class="primary-cta-content">
+    <h2 class="primary-cta-title">${ctaData.title}</h2>
+    <p class="primary-cta-body">${ctaData.body}</p>
+    <a href="${ctaData.buttonUrl}" class="primary-cta-button">${ctaData.buttonText}</a>
+  </div>
+`;
