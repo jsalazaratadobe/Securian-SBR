@@ -517,3 +517,9 @@ header nav .nav-tools .icon-search-light {
 
 /* optional: remove underline hover effect if present */
 header nav .nav
+/* Logo size fix */
+header .nav-brand img {
+  width: 160px;
+  max-width: unset;
+  height: auto;
+}
