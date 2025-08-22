@@ -5,8 +5,9 @@
   justify-content: flex-start;
   min-height: 400px;
   overflow: hidden;
-  background: url('path-to-your-image.jpg') no-repeat center center;
-  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+  background-size: cover; 
   padding-left: 60px;
   color: #000;
 }

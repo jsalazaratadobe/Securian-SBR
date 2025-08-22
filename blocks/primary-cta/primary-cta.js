@@ -10,6 +10,13 @@ export default function decorate(block) {
   const button = block.querySelector('a');
   if (button) button.classList.add('primary-cta-button');
 
+  // Get image (last child)
+  const img = block.querySelector('picture img');
+  if (img) {
+    block.style.backgroundImage = `url(${img.src})`;
+    img.closest('div').remove(); // remove image from DOM
+  }
+
   // Wrap text content in a container
   const contentWrapper = document.createElement('div');
   contentWrapper.classList.add('primary-cta-content');
