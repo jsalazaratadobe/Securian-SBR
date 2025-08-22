@@ -1,24 +1,27 @@
-const primaryCta = document.getElementById('primary-cta');
+export default function decorate(block) {
+  const image = block.querySelector('img');
+  const contentWrapper = document.createElement('div');
+  contentWrapper.className = 'primary-cta-content';
 
-const ctaData = {
-  imageUrl: 'https://your.cdn.com/path-to-image.jpg',
-  title: 'Financial wellness tips – in your inbox',
-  body: 'Receive monthly emails to help keep your finances in shape.',
-  buttonText: 'Sign up today',
-  buttonUrl: '/signup'
-};
+  // Move all text content into the content wrapper
+  [...block.children].forEach((row) => {
+    if (!row.querySelector('img')) {
+      contentWrapper.appendChild(row);
+    }
+  });
 
-// Set background image dynamically
-primaryCta.style.backgroundImage = `url('${ctaData.imageUrl}')`;
-primaryCta.style.backgroundPosition = 'right center';
-primaryCta.style.backgroundRepeat = 'no-repeat';
-primaryCta.style.backgroundSize = 'cover';
+  // If image exists, wrap it in a background div
+  if (image) {
+    const background = document.createElement('div');
+    background.className = 'primary-cta-background';
+    background.style.backgroundImage = `url(${image.src})`;
 
-// Inject the rest of the content
-primaryCta.innerHTML = `
-  <div class="primary-cta-content">
-    <h2 class="primary-cta-title">${ctaData.title}</h2>
-    <p class="primary-cta-body">${ctaData.body}</p>
-    <a href="${ctaData.buttonUrl}" class="primary-cta-button">${ctaData.buttonText}</a>
-  </div>
-`;
+    block.innerHTML = '';
+    block.append(background, contentWrapper);
+  } else {
+    block.innerHTML = '';
+    block.append(contentWrapper);
+  }
+
+  block.classList.add('primary-cta');
+}

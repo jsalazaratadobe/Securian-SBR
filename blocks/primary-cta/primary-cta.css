@@ -7,8 +7,23 @@
   overflow: hidden;
   padding-left: 60px;
   color: #000;
+  background-color: #e5e5e5;
 }
 
+/* Background image container */
+.primary-cta-background {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-position: right center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+/* Semi-circle white shape on the left */
 .primary-cta::before {
   content: '';
   position: absolute;
@@ -22,25 +37,26 @@
   z-index: 1;
 }
 
+/* Text content over background */
 .primary-cta-content {
   position: relative;
   z-index: 2;
   max-width: 400px;
 }
 
-.primary-cta-title {
+.primary-cta-content h2 {
   color: #007a33;
   font-size: 2.5rem;
   margin-bottom: 1rem;
   font-weight: 700;
 }
 
-.primary-cta-body {
+.primary-cta-content p {
   font-size: 1rem;
   margin-bottom: 1.5rem;
 }
 
-.primary-cta-button {
+.primary-cta-content a {
   background-color: #0077c8;
   color: #fff;
   text-decoration: none;
