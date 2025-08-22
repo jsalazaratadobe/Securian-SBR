@@ -449,3 +449,71 @@ html[dir="rtl"] .search-input-container input[type="search"]::-webkit-search-can
   
 
 }
+/* ========== HEADER CLEANUP FOR SECURIAN LOOK ========== */
+
+header .nav-wrapper {
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* optional subtle shadow */
+}
+
+header nav {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  max-width: 1264px;
+  margin: 0 auto;
+}
+
+/* brand/logo */
+header nav .nav-brand img {
+  max-height: 48px;
+  width: auto;
+}
+
+/* nav items */
+header nav .nav-sections ul {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+header nav .nav-sections ul > li > a {
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px 12px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+header nav .nav-sections ul > li > a:hover {
+  color: #007a33; /* Securian green */
+}
+
+/* hide hamburger on desktop */
+@media (width >= 900px) {
+  header nav .nav-hamburger {
+    display: none !important;
+  }
+}
+
+/* tools (search icon) */
+header nav .nav-tools {
+  margin-left: auto;
+}
+
+header nav .nav-tools .icon-search-light {
+  filter: invert(1); /* optional: make icon visible on white bg */
+  margin-top: 0;
+}
+
+/* optional: remove underline hover effect if present */
+header nav .nav

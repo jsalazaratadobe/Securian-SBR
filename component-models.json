@@ -425,6 +425,39 @@
     ]
   },
   {
+  "id": "primary-cta",
+  "fields": [
+    { "component": "text", "name": "title", "label": "Title", "valueType": "string" },
+    { "component": "richtext", "name": "body", "label": "Body", "valueType": "string" },
+    { "component": "text", "name": "btn-text", "label": "Button Text", "valueType": "string" },
+    { "component": "aem-content", "name": "btn-link", "label": "Button Link", "valueType": "string" },
+    { "component": "reference", "name": "image", "label": "Background Image", "valueType": "string", "multi": false },
+    { "component": "text", "name": "alt", "label": "Image Alt Text", "valueType": "string" }
+  ]
+},
+{
+  "id": "hero-teaser",
+  "fields": [
+    { "component": "text", "name": "title", "label": "Title", "valueType": "string" },
+    { "component": "richtext", "name": "body", "label": "Body", "valueType": "string" },
+    { "component": "text", "name": "btn-text", "label": "Button Text", "valueType": "string" },
+    { "component": "aem-content", "name": "btn-link", "label": "Button Link", "valueType": "string" },
+    { "component": "reference", "name": "image", "label": "Hero Image", "valueType": "string", "multi": false },
+    { "component": "text", "name": "alt", "label": "Image Alt Text", "valueType": "string" }
+  ]
+},
+{
+  "id": "card-teaser",
+  "fields": [
+    { "component": "reference", "name": "image", "label": "Card Image", "valueType": "string", "multi": false },
+    { "component": "text", "name": "alt", "label": "Image Alt Text", "valueType": "string" },
+    { "component": "text", "name": "title", "label": "Title", "valueType": "string" },
+    { "component": "richtext", "name": "body", "label": "Body", "valueType": "string" },
+    { "component": "text", "name": "btn-text", "label": "Button Text", "valueType": "string" },
+    { "component": "aem-content", "name": "btn-link", "label": "Button Link", "valueType": "string" }
+  ]
+},
+  {
     "id": "columns",
     "fields": [
       {
