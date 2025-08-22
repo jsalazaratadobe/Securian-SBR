@@ -6,25 +6,25 @@ export default function decorate(block) {
   let ctaText = '';
   let ctaHref = '';
 
-  // Move all non-image content into the content wrapper
   [...block.children].forEach((row) => {
     const link = row.querySelector('a');
     const input = row.querySelector('input');
 
     if (!row.querySelector('img')) {
-      // Extract CTA text and href but do not append raw rows with a link or input
       if (link) {
+        // Store href and remove this row from rendering
         ctaHref = link.getAttribute('href');
-        ctaText = link.textContent.trim();
       } else if (input) {
+        // Store button label and remove this row from rendering
         ctaText = input.value.trim();
       } else {
-        contentWrapper.appendChild(row); // only append non-link, non-input rows
+        // Normal row, append to DOM
+        contentWrapper.appendChild(row);
       }
     }
   });
 
-  // Build CTA button if we have text and link
+  // Add CTA button only if both parts exist
   if (ctaText && ctaHref) {
     const button = document.createElement('a');
     button.className = 'cta-button';
@@ -34,7 +34,7 @@ export default function decorate(block) {
     contentWrapper.appendChild(button);
   }
 
-  // Wrap the image if it exists
+  // Background image handling
   if (image) {
     const background = document.createElement('div');
     background.className = 'primary-cta-background';
