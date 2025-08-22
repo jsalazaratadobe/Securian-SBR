@@ -6,7 +6,6 @@ export default function decorate(block) {
   let ctaText = '';
   let ctaHref = '';
 
-  // Loop through and process block rows
   [...block.children].forEach((row) => {
     const link = row.querySelector('a');
     const input = row.querySelector('input');
@@ -14,19 +13,16 @@ export default function decorate(block) {
     if (!row.querySelector('img')) {
       if (link) {
         ctaHref = link.getAttribute('href');
-        return; // prevent this row from rendering
-      }
-
-      if (input) {
+        row.remove(); // ✅ Remove the row with the raw link
+      } else if (input) {
         ctaText = input.value.trim();
-        return; // prevent this row from rendering
+        row.remove(); // ✅ Remove the row with the input box
+      } else {
+        contentWrapper.appendChild(row);
       }
-
-      contentWrapper.appendChild(row);
     }
   });
 
-  // Build the CTA button from captured input + link
   if (ctaText && ctaHref) {
     const button = document.createElement('a');
     button.className = 'cta-button';
@@ -36,11 +32,11 @@ export default function decorate(block) {
     contentWrapper.appendChild(button);
   }
 
-  // Background image container
   if (image) {
     const background = document.createElement('div');
     background.className = 'primary-cta-background';
     background.style.backgroundImage = `url(${image.src})`;
+
     block.innerHTML = '';
     block.append(background, contentWrapper);
   } else {
