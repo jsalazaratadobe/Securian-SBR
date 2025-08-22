@@ -12,19 +12,19 @@ export default function decorate(block) {
 
     if (!row.querySelector('img')) {
       if (link) {
-        // Store href and remove this row from rendering
         ctaHref = link.getAttribute('href');
-      } else if (input) {
-        // Store button label and remove this row from rendering
-        ctaText = input.value.trim();
-      } else {
-        // Normal row, append to DOM
-        contentWrapper.appendChild(row);
+        return; // Prevent row from rendering
       }
+
+      if (input) {
+        ctaText = input.value.trim();
+        return; // Prevent row from rendering
+      }
+
+      contentWrapper.appendChild(row);
     }
   });
 
-  // Add CTA button only if both parts exist
   if (ctaText && ctaHref) {
     const button = document.createElement('a');
     button.className = 'cta-button';
@@ -34,12 +34,10 @@ export default function decorate(block) {
     contentWrapper.appendChild(button);
   }
 
-  // Background image handling
   if (image) {
     const background = document.createElement('div');
     background.className = 'primary-cta-background';
     background.style.backgroundImage = `url(${image.src})`;
-
     block.innerHTML = '';
     block.append(background, contentWrapper);
   } else {
