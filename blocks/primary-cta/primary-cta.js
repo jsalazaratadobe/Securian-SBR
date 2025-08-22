@@ -9,14 +9,17 @@ export default function decorate(block) {
   // Move all non-image content into the content wrapper
   [...block.children].forEach((row) => {
     const link = row.querySelector('a');
+    const input = row.querySelector('input');
 
     if (!row.querySelector('img')) {
-      contentWrapper.appendChild(row);
-
-      // Check if this row contains a link
+      // Extract CTA text and href but do not append raw rows with a link or input
       if (link) {
         ctaHref = link.getAttribute('href');
-        ctaText = row.textContent.trim();
+        ctaText = link.textContent.trim();
+      } else if (input) {
+        ctaText = input.value.trim();
+      } else {
+        contentWrapper.appendChild(row); // only append non-link, non-input rows
       }
     }
   });
@@ -28,7 +31,6 @@ export default function decorate(block) {
     button.href = ctaHref;
     button.textContent = ctaText;
     button.setAttribute('role', 'button');
-
     contentWrapper.appendChild(button);
   }
 
