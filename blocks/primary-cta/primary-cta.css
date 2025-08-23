@@ -1,76 +1,81 @@
- /* Primary CTA block container */
 .primary-cta {
   position: relative;
   display: flex;
+  justify-content: flex-start;
   align-items: center;
-  padding: 40px;
-  color: #fff;
-  text-align: left;
-  margin-top: var(--nav-height, 90px); /* Ensure it's below the header */
+  min-height: 420px;
+  padding: 60px 40px;
+  overflow: hidden;
+  margin-top: var(--nav-height, 90px);
 }
 
-/* Full background image behind block */
+/* Background image */
 .primary-cta-background {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center;
+  background-position: right center;
+  background-repeat: no-repeat;
   z-index: 1;
 }
 
-/* Content wrapper that holds circle + content */
+/* White translucent circle */
 .primary-cta-content-wrapper {
   position: relative;
-  display: inline-block;
-  padding: 2rem;
-  z-index: 2; /* Ensure wrapper stays above bg */
+  max-width: 600px;
+  z-index: 2;
 }
 
-/* White circle sits behind content */
 .primary-cta-content-wrapper::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
-  height: 300px;
-  background-color: rgba(255, 255, 255, 0.85);
+  width: 500px;
+  height: 500px;
+  background-color: rgba(255, 255, 255, 0.92);
   border-radius: 50%;
   z-index: 1;
 }
 
-/* Inner content (headings + button) */
+/* Actual content */
 .primary-cta-content {
   position: relative;
-  z-index: 2; /* Keeps content above the circle */
-  max-width: 500px;
+  z-index: 2;
   text-align: left;
+  padding: 40px 20px;
 }
 
-/* Unified heading styles */
-.primary-cta-content h2,
-.primary-cta-content h3 {
+/* Headings */
+.primary-cta-content h1,
+.primary-cta-content h2 {
+  font-size: 2.5rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
   color: #007a33; /* Securian green */
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
 }
 
-/* CTA button styling */
-.primary-cta .cta-button {
+/* Body text */
+.primary-cta-content p {
+  font-size: 1.125rem;
+  color: #222;
+  margin-bottom: 1.25rem;
+}
+
+/* CTA button */
+.primary-cta-content .cta-button {
   display: inline-block;
-  margin-top: 1rem;
-  padding: 12px 24px;
-  background-color: #0077c8; /* Securian blue */
+  padding: 14px 28px;
+  background-color: #0077c8;
   color: white;
-  font-weight: bold;
+  font-weight: 600;
   border-radius: 4px;
   text-decoration: none;
   transition: background-color 0.3s ease;
-  z-index: 3;
-  position: relative;
 }
 
-.primary-cta .cta-button:hover {
+.primary-cta-content .cta-button:hover {
   background-color: #005ea8;
 }
