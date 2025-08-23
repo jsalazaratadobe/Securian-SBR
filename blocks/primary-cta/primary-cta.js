@@ -1,50 +1,40 @@
 export default function decorate(block) {
   const image = block.querySelector('img');
-  const contentWrapper = document.createElement('div');
-  contentWrapper.className = 'primary-cta-content';
+  const buttonInput = block.querySelector('input');
+  const buttonLink = block.querySelector('a');
 
-  let ctaText = '';
-  let ctaHref = '';
+  // Extract CTA data
+  const ctaText = buttonInput?.value?.trim() || 'Learn More';
+  const ctaHref = buttonLink?.getAttribute('href') || '#';
 
-  const rows = Array.from(block.children); // ✅ Convert live collection to static array
+  // Build content container
+  const content = document.createElement('div');
+  content.className = 'primary-cta-content';
 
-  rows.forEach((row) => {
-    const link = row.querySelector('a');
-    const input = row.querySelector('input');
-
-    if (!row.querySelector('img')) {
-      if (link) {
-        ctaHref = link.getAttribute('href');
-        row.remove(); // ✅ Remove raw link row
-      } else if (input) {
-        ctaText = input.value.trim();
-        row.remove(); // ✅ Remove input row
-      } else {
-        contentWrapper.appendChild(row);
-      }
+  // Add heading and body if present
+  [...block.children].forEach((row) => {
+    if (!row.querySelector('input') && !row.querySelector('a') && !row.querySelector('img')) {
+      content.appendChild(row);
     }
   });
 
-  if (ctaText && ctaHref) {
-    const button = document.createElement('a');
-    button.className = 'cta-button';
-    button.href = ctaHref;
-    button.textContent = ctaText;
-    button.setAttribute('role', 'button');
-    contentWrapper.appendChild(button);
-  }
+  // Add CTA button
+  const button = document.createElement('a');
+  button.className = 'cta-button';
+  button.href = ctaHref;
+  button.textContent = ctaText;
+  content.appendChild(button);
 
+  // Handle background image
+  block.innerHTML = '';
   if (image) {
-    const background = document.createElement('div');
-    background.className = 'primary-cta-background';
-    background.style.backgroundImage = `url(${image.src})`;
-
-    block.innerHTML = '';
-    block.append(background, contentWrapper);
-  } else {
-    block.innerHTML = '';
-    block.append(contentWrapper);
+    const bg = document.createElement('div');
+    bg.className = 'primary-cta-background';
+    bg.style.backgroundImage = `url(${image.src})`;
+    block.append(bg);
   }
+  block.append(content);
 
+  // Tag block for styling
   block.classList.add('primary-cta');
 }

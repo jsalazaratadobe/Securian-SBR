@@ -2,68 +2,23 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  min-height: 400px;
-  overflow: hidden;
-  padding-left: 60px;
-  color: #000;
-  background-color: #e5e5e5;
+  padding: 40px;
+  color: #fff;
+  text-align: left;
 }
 
-/* Background image container */
 .primary-cta-background {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-position: right center;
+  inset: 0;
   background-size: cover;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-/* Semi-circle white shape on the left */
-.primary-cta::before {
-  content: '';
-  position: absolute;
-  left: -100px;
-  top: 0;
-  width: 500px;
-  height: 100%;
-  background: white;
-  border-top-right-radius: 500px;
-  border-bottom-right-radius: 500px;
+  background-position: center;
   z-index: 1;
 }
 
-/* Text content over background */
 .primary-cta-content {
   position: relative;
   z-index: 2;
-  max-width: 400px;
-}
-
-.primary-cta-content h2 {
-  color: #007a33;
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  font-weight: 700;
-}
-
-.primary-cta-content p {
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.primary-cta-content a {
-  background-color: #0077c8;
-  color: #fff;
-  text-decoration: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  font-weight: bold;
-  display: inline-block;
+  max-width: 500px;
 }
 
 .primary-cta .cta-button {
@@ -72,9 +27,9 @@
   padding: 12px 24px;
   background-color: #0077c8; /* Securian blue */
   color: white;
-  text-decoration: none;
   font-weight: bold;
   border-radius: 4px;
+  text-decoration: none;
   transition: background-color 0.3s ease;
 }
 
