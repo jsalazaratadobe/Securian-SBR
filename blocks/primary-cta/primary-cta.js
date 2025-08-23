@@ -1,90 +1,55 @@
 export default function decorate(block) {
-  // Read UE-bound data-* attributes (from the model)
+  // 1) Read UE-bound dataset (these attributes are written on the block wrapper)
+  //    We intentionally map Title -> <h2>, Body -> <p>
   const {
     title = '',
     body = '',
-    ctaText = 'Learn More',
+    ctaText = 'Learn more',
     ctaLink = '#',
-    imageRef = '',
-    alt = ''
   } = block.dataset;
 
-  // Fallbacks if author pasted table content instead of using fields
-  let fallbackTitle = title;
-  let fallbackBody = body;
-  let fallbackHref = ctaLink;
-  let fallbackCtaText = ctaText;
+  // 2) Get an author-selected image (UE inserts a normal <picture>/<img>)
+  const pic = block.querySelector('picture, img');
+  if (pic) {
+    const img = pic.querySelector('img') || pic;
+    // expose the image as a CSS var so CSS can paint it as a background
+    block.style.setProperty('--cta-bg', `url("${img.getAttribute('src')}")`);
+    pic.remove();
+  }
 
-  // Try to extract from existing rows when authors paste into the block
-  const rows = Array.from(block.children);
-  rows.forEach((row) => {
-    const h = row.querySelector('h1,h2,h3');
-    if (h && !fallbackTitle) fallbackTitle = h.textContent.trim();
+  // 3) Build markup that supports inline editing (data-rich-text)
+  const wrapper = document.createElement('div');
+  wrapper.className = 'primary-cta-content-wrapper';
 
-    const p = row.querySelector('p');
-    if (p && !fallbackBody) fallbackBody = p.textContent.trim();
-
-    const a = row.querySelector('a');
-    if (a) {
-      if (!fallbackHref) fallbackHref = a.getAttribute('href') || '#';
-      if (!fallbackCtaText) fallbackCtaText = a.textContent.trim() || ctaText;
-    }
-
-    const picOrImg = row.querySelector('picture, img');
-    if (picOrImg && !imageRef) {
-      const img = picOrImg.querySelector('img') || picOrImg;
-      if (img && img.src) {
-        // If imageRef wasn’t set in UE, take the inline image
-        block.dataset.imageRef = img.src;
-      }
-    }
-  });
-
-  // Build new DOM
   const content = document.createElement('div');
   content.className = 'primary-cta-content';
 
-  if (fallbackTitle) {
-    const h2 = document.createElement('h2');
-    h2.textContent = fallbackTitle;
-    content.appendChild(h2);
-  }
+  content.innerHTML = `
+    <h2 class="primary-cta-title" data-rich-text="title">${title}</h2>
+    <p class="primary-cta-body" data-rich-text="body">${body}</p>
 
-  if (fallbackBody) {
-    const p = document.createElement('p');
-    p.textContent = fallbackBody;
-    content.appendChild(p);
-  }
+    <a class="cta-button" href="${ctaLink}">
+      <span data-rich-text="ctaText">${ctaText}</span>
+    </a>
 
-  if (fallbackCtaText && fallbackHref) {
-    const btn = document.createElement('a');
-    btn.className = 'cta-button';
-    btn.href = fallbackHref;
-    btn.textContent = fallbackCtaText;
-    btn.setAttribute('role', 'button');
-    content.appendChild(btn);
-  }
+    <!-- Hidden holder for link so we can sync href live while editing -->
+    <span data-rich-text="ctaLink" hidden>${ctaLink}</span>
+  `;
 
-  // Background wrapper (for bg image & circle layering)
-  const bg = document.createElement('div');
-  bg.className = 'primary-cta-background';
-
-  // Clean & append
-  block.innerHTML = '';
-  block.append(bg, content);
+  // Clear and re-append
+  block.textContent = '';
+  wrapper.append(content);
+  block.append(wrapper);
   block.classList.add('primary-cta');
 
-  // Inject background image if provided
-  const src = imageRef || block.dataset.imageRef || '';
-  if (src) {
-    bg.style.setProperty('--bg-img', `url("${src}")`);
-    // optional: alt, if you decide to render an <img> for SEO
-  }
-
-  // Alignment: default left; if block has class "right", flip panel
-  if (block.classList.contains('right')) {
-    block.dataset.align = 'right';
-  } else {
-    block.dataset.align = 'left';
-  }
+  // 4) Keep the href in sync when editing the “Button Link” field in the UE form
+  const linkHolder = content.querySelector('[data-rich-text="ctaLink"]');
+  const button = content.querySelector('.cta-button');
+  const syncHref = () => {
+    const href = (linkHolder.textContent || '').trim();
+    button.setAttribute('href', href || '#');
+  };
+  syncHref();
+  const mo = new MutationObserver(syncHref);
+  mo.observe(linkHolder, { childList: true, subtree: true, characterData: true });
 }

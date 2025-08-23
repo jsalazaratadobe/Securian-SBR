@@ -1,123 +1,78 @@
+/* Layout & background */
 .primary-cta {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr;
-  min-height: clamp(360px, 48vw, 620px);
   align-items: center;
+  min-height: clamp(420px, 52vw, 640px);
+  background: var(--cta-bg) center / cover no-repeat;
   overflow: hidden;
-  /* sit below fixed header on published pages */
-  margin-top: var(--nav-offset, 0);
+  padding: clamp(20px, 3vw, 40px);
 }
 
-header + main .primary-cta {
-  /* if your header sets --nav-height, this will prevent overlap */
-  --nav-offset: var(--nav-height, 90px);
+/* Offset when viewed outside UE (avoid the fixed header overlap) */
+html:not([data-aue]) .section:first-child .primary-cta {
+  margin-top: var(--nav-height, 96px);
 }
+/* Nice anchor positioning when linking to the section */
+.section .primary-cta { scroll-margin-top: var(--nav-height, 96px); }
 
-/* Background image layer */
-.primary-cta-background {
+/* White swoosh “circle” */
+.primary-cta-content-wrapper {
+  position: relative;
+  display: inline-block;
+  padding: clamp(10px, 1.5vw, 20px);
+}
+.primary-cta-content-wrapper::before {
+  content: "";
   position: absolute;
-  inset: 0;
-  background-image: var(--bg-img, none);
-  background-size: cover;
-  background-position: center right;
+  top: 50%;
+  left: clamp(-240px, -6vw, -80px);
+  transform: translateY(-50%);
+  width: clamp(420px, 40vw, 640px);
+  height: clamp(420px, 40vw, 640px);
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
   z-index: 1;
 }
-
-/* Soft white circle (panel background) */
-.primary-cta::before {
-  content: '';
-  position: absolute;
-  z-index: 2;
-  /* default: left overlay */
-  left: -20%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: clamp(420px, 45vw, 760px);
-  height: clamp(420px, 45vw, 760px);
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 50%;
-  filter: drop-shadow(0 2px 12px rgba(0,0,0,0.06));
-}
-
-/* Right style flips the circle */
-.primary-cta[data-align="right"]::before {
+/* Alternate alignment (Right Overlay style) */
+.primary-cta.right .primary-cta-content-wrapper::before {
   left: auto;
-  right: -20%;
+  right: clamp(-240px, -6vw, -80px);
 }
 
-/* Content stack */
+/* Content on top of the circle */
 .primary-cta-content {
   position: relative;
-  z-index: 3;
-  padding: clamp(16px, 4vw, 56px);
-  max-width: min(720px, 86vw);
-  margin-left: clamp(16px, 6vw, 120px); /* push off the left a bit */
+  z-index: 2;
+  max-width: 600px;
+  text-align: left;
 }
 
-.primary-cta[data-align="right"] .primary-cta-content {
-  margin-left: auto;
-  margin-right: clamp(16px, 6vw, 120px);
-}
-
-/* Typography */
-.primary-cta-content h2 {
-  color: #007a33; /* Securian green */
-  font-size: clamp(28px, 5vw, 56px);
-  font-weight: 800;
-  letter-spacing: 0.01em;
-  line-height: 1.1;
+/* Typography (Securian look) */
+.primary-cta-title {
   margin: 0 0 12px;
+  font-weight: 700;
+  line-height: 1.1;
+  font-size: clamp(28px, 4vw, 56px);
+  color: #007a33; /* Securian green */
 }
-
-.primary-cta-content p {
-  color: #1a1a1a;
-  font-size: clamp(16px, 2.2vw, 20px);
-  line-height: 1.5;
-  margin: 0 0 20px;
+.primary-cta-body {
+  margin: 0 0 24px;
+  font-size: clamp(16px, 1.7vw, 22px);
+  color: #1f2937;
 }
 
 /* CTA button */
 .primary-cta .cta-button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 22px;
-  border-radius: 8px;
-  background: #0067c5;     /* Securian blue */
+  gap: .5rem;
+  padding: 12px 24px;
+  border-radius: 6px;
+  background: #0077c8;      /* Securian blue */
   color: #fff;
-  font-weight: 700;
-  font-size: 16px;
   text-decoration: none;
-  box-shadow: 0 1px 0 rgba(0,0,0,.06);
-  transition: background .2s ease, transform .05s ease-in;
+  font-weight: 700;
+  transition: background .2s ease;
 }
-
-.primary-cta .cta-button:hover {
-  background: #005aa8;
-}
-
-.primary-cta .cta-button:active {
-  transform: translateY(1px);
-}
-
-/* Responsive tweaks */
-@media (max-width: 900px) {
-  .primary-cta::before {
-    left: -35%;
-    width: clamp(380px, 70vw, 560px);
-    height: clamp(380px, 70vw, 560px);
-  }
-  .primary-cta[data-align="right"]::before {
-    left: auto;
-    right: -35%;
-  }
-
-  .primary-cta-content {
-    margin-left: clamp(12px, 5vw, 60px);
-  }
-
-  .primary-cta[data-align="right"] .primary-cta-content {
-    margin-right: clamp(12px, 5vw, 60px);
-  }
-}
+.primary-cta .cta-button:hover { background: #005ea8; }
