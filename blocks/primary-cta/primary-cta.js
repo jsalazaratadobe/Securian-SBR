@@ -7,11 +7,15 @@ export default function decorate(block) {
   const ctaText = buttonInput?.value?.trim() || 'Learn More';
   const ctaHref = buttonLink?.getAttribute('href') || '#';
 
-  // Build content container
+  // Build outer wrapper (for positioning white circle behind)
+  const wrapper = document.createElement('div');
+  wrapper.className = 'primary-cta-content-wrapper';
+
+  // Inner content for headings + button
   const content = document.createElement('div');
   content.className = 'primary-cta-content';
 
-  // Add heading and body if present
+  // Add heading/body rows, skip inputs, anchors, and images
   [...block.children].forEach((row) => {
     if (!row.querySelector('input') && !row.querySelector('a') && !row.querySelector('img')) {
       content.appendChild(row);
@@ -25,7 +29,10 @@ export default function decorate(block) {
   button.textContent = ctaText;
   content.appendChild(button);
 
-  // Handle background image
+  // Put content inside wrapper
+  wrapper.appendChild(content);
+
+  // Reset block content and add background + wrapper
   block.innerHTML = '';
   if (image) {
     const bg = document.createElement('div');
@@ -33,7 +40,7 @@ export default function decorate(block) {
     bg.style.backgroundImage = `url(${image.src})`;
     block.append(bg);
   }
-  block.append(content);
+  block.append(wrapper);
 
   // Tag block for styling
   block.classList.add('primary-cta');
