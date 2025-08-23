@@ -4,21 +4,21 @@
   align-items: center;
   justify-content: flex-start;
   min-height: 440px;
-  padding: 60px 40px;
   background-size: cover;
-  background-position: right center;
+  background-position: center;
+  padding: 60px 40px;
   overflow: hidden;
 }
 
-/* Content wrapper — holds the circle + text */
+/* Content wrapper */
 .primary-cta-content-wrapper {
   position: relative;
   z-index: 2;
-  max-width: 550px;
-  padding: 40px 30px;
+  max-width: 520px;
+  padding: 40px 32px;
 }
 
-/* White translucent circle */
+/* Overlay circle behind text */
 .primary-cta-content-wrapper::before {
   content: '';
   position: absolute;
@@ -27,37 +27,32 @@
   transform: translate(-50%, -50%);
   width: 520px;
   height: 520px;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 50%;
   z-index: 1;
 }
 
-/* Inner content on top of circle */
+/* Typography */
 .primary-cta-content-wrapper > * {
   position: relative;
   z-index: 2;
-  text-align: left;
 }
 
-/* Headings */
-.primary-cta-content-wrapper h1,
 .primary-cta-content-wrapper h2 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #007a33; /* Securian green */
-  margin-bottom: 0.75rem;
+  color: #007a33; /* Brand green */
+  margin-bottom: 1rem;
   line-height: 1.2;
 }
 
-/* Subtext */
 .primary-cta-content-wrapper p {
   font-size: 1.125rem;
   color: #222;
   margin-bottom: 1.25rem;
 }
 
-/* CTA button — FIXED */
-.primary-cta-content-wrapper a,
+/* CTA Button */
 .primary-cta-content-wrapper .cta-button {
   display: inline-block;
   padding: 14px 28px;
@@ -67,12 +62,8 @@
   border-radius: 4px;
   text-decoration: none;
   transition: background-color 0.3s ease;
-  box-shadow: none;
-  z-index: 3;
-  position: relative;
 }
 
-.primary-cta-content-wrapper a:hover,
 .primary-cta-content-wrapper .cta-button:hover {
   background-color: #005ea8;
 }

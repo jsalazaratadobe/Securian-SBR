@@ -1,16 +1,25 @@
 export default function decorate(block) {
-  // Wrap content for better layering without reordering DOM
-  const contentWrapper = document.createElement('div');
-  contentWrapper.className = 'primary-cta-content-wrapper';
+  // Prefer UE-driven data attributes if present
+  const title = block.dataset.title || block.querySelector('h1, h2')?.textContent || '';
+  const body = block.dataset.body || block.querySelector('p')?.textContent || '';
+  const ctaText = block.dataset.ctaText || block.querySelector('input')?.value || 'Learn More';
+  const ctaHref = block.dataset.ctaLink || block.querySelector('a')?.getAttribute('href') || '#';
+  const image = block.querySelector('img');
 
-  // Move existing content into wrapper
-  while (block.firstChild) {
-    contentWrapper.appendChild(block.firstChild);
+  // Build the structure UE expects
+  block.innerHTML = `
+    <div class="primary-cta-content-wrapper">
+      ${title ? `<h2>${title}</h2>` : ''}
+      ${body ? `<p>${body}</p>` : ''}
+      <a class="cta-button" href="${ctaHref}">${ctaText}</a>
+    </div>
+  `;
+
+  // Set background image
+  if (image) {
+    block.style.backgroundImage = `url(${image.src})`;
+    image.remove(); // we rely on bg instead
   }
 
-  // Append wrapper back into block
-  block.append(contentWrapper);
-
-  // Add base block class
   block.classList.add('primary-cta');
 }
