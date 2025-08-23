@@ -1,55 +1,47 @@
 .primary-cta {
   position: relative;
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  min-height: 420px;
+  justify-content: flex-start;
+  min-height: 440px;
   padding: 60px 40px;
-  overflow: hidden;
-  margin-top: var(--nav-height, 90px);
-}
-
-/* Background image */
-.primary-cta-background {
-  position: absolute;
-  inset: 0;
   background-size: cover;
   background-position: right center;
-  background-repeat: no-repeat;
-  z-index: 1;
+  overflow: hidden;
+}
+
+/* Content wrapper — holds the circle + text */
+.primary-cta-content-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 550px;
+  padding: 40px 30px;
 }
 
 /* White translucent circle */
-.primary-cta-content-wrapper {
-  position: relative;
-  max-width: 600px;
-  z-index: 2;
-}
-
 .primary-cta-content-wrapper::before {
   content: '';
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 500px;
-  height: 500px;
-  background-color: rgba(255, 255, 255, 0.92);
+  width: 520px;
+  height: 520px;
+  background: rgba(255, 255, 255, 0.92);
   border-radius: 50%;
   z-index: 1;
 }
 
-/* Actual content */
-.primary-cta-content {
+/* Inner content on top of circle */
+.primary-cta-content-wrapper > * {
   position: relative;
   z-index: 2;
   text-align: left;
-  padding: 40px 20px;
 }
 
 /* Headings */
-.primary-cta-content h1,
-.primary-cta-content h2 {
+.primary-cta-content-wrapper h1,
+.primary-cta-content-wrapper h2 {
   font-size: 2.5rem;
   font-weight: 700;
   color: #007a33; /* Securian green */
@@ -57,25 +49,30 @@
   line-height: 1.2;
 }
 
-/* Body text */
-.primary-cta-content p {
+/* Subtext */
+.primary-cta-content-wrapper p {
   font-size: 1.125rem;
   color: #222;
   margin-bottom: 1.25rem;
 }
 
-/* CTA button */
-.primary-cta-content .cta-button {
+/* CTA button — FIXED */
+.primary-cta-content-wrapper a,
+.primary-cta-content-wrapper .cta-button {
   display: inline-block;
   padding: 14px 28px;
   background-color: #0077c8;
-  color: white;
+  color: #fff !important;
   font-weight: 600;
   border-radius: 4px;
   text-decoration: none;
   transition: background-color 0.3s ease;
+  box-shadow: none;
+  z-index: 3;
+  position: relative;
 }
 
-.primary-cta-content .cta-button:hover {
+.primary-cta-content-wrapper a:hover,
+.primary-cta-content-wrapper .cta-button:hover {
   background-color: #005ea8;
 }
