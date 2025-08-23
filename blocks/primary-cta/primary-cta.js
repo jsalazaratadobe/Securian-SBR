@@ -1,55 +1,40 @@
 export default function decorate(block) {
-  // 1) Read UE-bound dataset (these attributes are written on the block wrapper)
-  //    We intentionally map Title -> <h2>, Body -> <p>
-  const {
-    title = '',
-    body = '',
-    ctaText = 'Learn more',
-    ctaLink = '#',
-  } = block.dataset;
-
-  // 2) Get an author-selected image (UE inserts a normal <picture>/<img>)
-  const pic = block.querySelector('picture, img');
-  if (pic) {
-    const img = pic.querySelector('img') || pic;
-    // expose the image as a CSS var so CSS can paint it as a background
-    block.style.setProperty('--cta-bg', `url("${img.getAttribute('src')}")`);
-    pic.remove();
+  // Ensure structure exists even if the author pasted something odd
+  if (!block.querySelector('.primary-cta-background')) {
+    const bg = document.createElement('div');
+    bg.className = 'primary-cta-background';
+    block.prepend(bg);
   }
 
-  // 3) Build markup that supports inline editing (data-rich-text)
-  const wrapper = document.createElement('div');
-  wrapper.className = 'primary-cta-content-wrapper';
+  // Turn any leading <img> into a CSS background and remove it
+  const inlineImg = block.querySelector('img');
+  const bgEl = block.querySelector('.primary-cta-background');
+  if (inlineImg && bgEl) {
+    bgEl.style.setProperty('--bg-url', `url("${inlineImg.src}")`);
+    inlineImg.remove();
+  }
 
-  const content = document.createElement('div');
-  content.className = 'primary-cta-content';
+  // Keep the CTA <a> href in sync with the hidden data-rich-text="ctaLink"
+  const linkSpan = block.querySelector('[data-rich-text="ctaLink"]');
+  const buttonEl = block.querySelector('.cta-button');
+  if (linkSpan && buttonEl) {
+    // Initialize from current text value
+    const setHref = () => {
+      const url = (linkSpan.textContent || '').trim();
+      if (url) buttonEl.setAttribute('href', url);
+    };
+    setHref();
 
-  content.innerHTML = `
-    <h2 class="primary-cta-title" data-rich-text="title">${title}</h2>
-    <p class="primary-cta-body" data-rich-text="body">${body}</p>
+    const mo = new MutationObserver(setHref);
+    mo.observe(linkSpan, { childList: true, subtree: true, characterData: true });
+  }
 
-    <a class="cta-button" href="${ctaLink}">
-      <span data-rich-text="ctaText">${ctaText}</span>
-    </a>
-
-    <!-- Hidden holder for link so we can sync href live while editing -->
-    <span data-rich-text="ctaLink" hidden>${ctaLink}</span>
-  `;
-
-  // Clear and re-append
-  block.textContent = '';
-  wrapper.append(content);
-  block.append(wrapper);
-  block.classList.add('primary-cta');
-
-  // 4) Keep the href in sync when editing the “Button Link” field in the UE form
-  const linkHolder = content.querySelector('[data-rich-text="ctaLink"]');
-  const button = content.querySelector('.cta-button');
-  const syncHref = () => {
-    const href = (linkHolder.textContent || '').trim();
-    button.setAttribute('href', href || '#');
-  };
-  syncHref();
-  const mo = new MutationObserver(syncHref);
-  mo.observe(linkHolder, { childList: true, subtree: true, characterData: true });
+  // Optional: set aria-label on the button using its visible text for accessibility
+  const buttonTextSpan = block.querySelector('.cta-button [data-rich-text="ctaText"]');
+  if (buttonTextSpan && buttonEl) {
+    const syncAria = () => buttonEl.setAttribute('aria-label', buttonTextSpan.textContent.trim());
+    syncAria();
+    const mo2 = new MutationObserver(syncAria);
+    mo2.observe(buttonTextSpan, { childList: true, subtree: true, characterData: true });
+  }
 }

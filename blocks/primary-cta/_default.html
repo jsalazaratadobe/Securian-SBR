@@ -1,8 +1,20 @@
-<div class="primary-cta-wrapper">
+<div class="primary-cta">
   <div class="primary-cta-background"></div>
-  <div class="primary-cta-content">
-    <h2>Work for yourself</h2>
-    <p>Receive monthly emails to help keep your finances in shape</p>
-    <a class="cta-button" href="#">Learn More</a>
+
+  <div class="primary-cta-content-wrapper">
+    <div class="primary-cta-content">
+      <h2 class="primary-cta-title" data-rich-text="title">Work for yourself</h2>
+      <p class="primary-cta-body" data-rich-text="body">Your subheading goes here.</p>
+
+      <a class="cta-button" href="#">
+        <span data-rich-text="ctaText">Learn more</span>
+      </a>
+
+      <!-- This hidden node allows UE to store/edit the link value, JS syncs it to the href -->
+      <span data-rich-text="ctaLink" hidden>#</span>
+
+      <!-- Hidden alt text value if you want to expose an alt field -->
+      <span data-rich-text="imageAlt" hidden=""></span>
+    </div>
   </div>
 </div>

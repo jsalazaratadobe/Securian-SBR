@@ -1,78 +1,90 @@
-/* Layout & background */
+/* Layout & header clearance */
 .primary-cta {
   position: relative;
-  display: grid;
-  align-items: center;
-  min-height: clamp(420px, 52vw, 640px);
-  background: var(--cta-bg) center / cover no-repeat;
-  overflow: hidden;
-  padding: clamp(20px, 3vw, 40px);
+  isolation: isolate; /* create stacking context for clean z-index control */
 }
 
-/* Offset when viewed outside UE (avoid the fixed header overlap) */
 html:not([data-aue]) .section:first-child .primary-cta {
-  margin-top: var(--nav-height, 96px);
+  margin-top: var(--nav-height, 96px); /* keep hero below fixed header on published pages */
 }
-/* Nice anchor positioning when linking to the section */
-.section .primary-cta { scroll-margin-top: var(--nav-height, 96px); }
 
-/* White swoosh “circle” */
+/* Background image */
+.primary-cta-background {
+  position: absolute;
+  inset: 0;
+  background-image: var(--bg-url, none);
+  background-size: cover;
+  background-position: center;
+  z-index: 0; /* behind everything */
+}
+
+/* White “swoosh” circle */
 .primary-cta-content-wrapper {
   position: relative;
-  display: inline-block;
-  padding: clamp(10px, 1.5vw, 20px);
+  padding: clamp(24px, 4vw, 48px);
+  z-index: 1;
 }
+
 .primary-cta-content-wrapper::before {
   content: "";
   position: absolute;
   top: 50%;
-  left: clamp(-240px, -6vw, -80px);
-  transform: translateY(-50%);
-  width: clamp(420px, 40vw, 640px);
-  height: clamp(420px, 40vw, 640px);
-  background: rgba(255,255,255,0.9);
+  left: clamp(120px, 18vw, 300px);
+  transform: translate(-50%, -50%);
+  width: clamp(360px, 40vw, 720px);
+  height: clamp(360px, 40vw, 720px);
   border-radius: 50%;
-  z-index: 1;
-}
-/* Alternate alignment (Right Overlay style) */
-.primary-cta.right .primary-cta-content-wrapper::before {
-  left: auto;
-  right: clamp(-240px, -6vw, -80px);
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 0; /* keep the circle behind text */
 }
 
-/* Content on top of the circle */
+/* Copy container */
 .primary-cta-content {
   position: relative;
-  z-index: 2;
-  max-width: 600px;
-  text-align: left;
+  z-index: 1; /* above the circle */
+  max-width: 560px;
 }
 
-/* Typography (Securian look) */
+/* Heading & body */
 .primary-cta-title {
-  margin: 0 0 12px;
-  font-weight: 700;
+  font-size: clamp(28px, 5vw, 56px);
   line-height: 1.1;
-  font-size: clamp(28px, 4vw, 56px);
+  font-weight: 800;
   color: #007a33; /* Securian green */
+  margin: 0 0 12px 0;
 }
+
 .primary-cta-body {
-  margin: 0 0 24px;
-  font-size: clamp(16px, 1.7vw, 22px);
-  color: #1f2937;
+  font-size: clamp(16px, 1.8vw, 20px);
+  line-height: 1.5;
+  color: #0a0a0a;
+  margin: 0 0 20px 0;
 }
 
 /* CTA button */
-.primary-cta .cta-button {
+.cta-button {
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  padding: 12px 24px;
-  border-radius: 6px;
-  background: #0077c8;      /* Securian blue */
-  color: #fff;
-  text-decoration: none;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 4px;
   font-weight: 700;
+  text-decoration: none;
+  background: #0067c5; /* Securian blue */
+  color: #fff;
   transition: background .2s ease;
+  position: relative;
+  z-index: 1;
 }
-.primary-cta .cta-button:hover { background: #005ea8; }
+
+.cta-button:hover { background: #0052a0; }
+
+/* Optional chevron */
+.cta-button::after {
+  content: "›";
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Make sure authoring stays stable in UE */
+[data-aue] .primary-cta { margin-top: 0; }
