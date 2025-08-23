@@ -1,25 +1,22 @@
 .primary-cta {
-  position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   min-height: 440px;
+  padding: 60px 40px;
   background-size: cover;
   background-position: center;
-  padding: 60px 40px;
-  overflow: hidden;
+  position: relative;
 }
 
-/* Content wrapper */
-.primary-cta-content-wrapper {
+.primary-cta-content {
   position: relative;
-  z-index: 2;
   max-width: 520px;
   padding: 40px 32px;
+  z-index: 2;
 }
 
-/* Overlay circle behind text */
-.primary-cta-content-wrapper::before {
+/* White circle overlay */
+.primary-cta-content::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -29,41 +26,34 @@
   height: 520px;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 50%;
-  z-index: 1;
+  z-index: -1;
 }
 
 /* Typography */
-.primary-cta-content-wrapper > * {
-  position: relative;
-  z-index: 2;
-}
-
-.primary-cta-content-wrapper h2 {
+.primary-cta-content h2 {
   font-size: 2.5rem;
+  color: #007a33;
   font-weight: 700;
-  color: #007a33; /* Brand green */
   margin-bottom: 1rem;
-  line-height: 1.2;
 }
 
-.primary-cta-content-wrapper p {
+.primary-cta-content p {
   font-size: 1.125rem;
   color: #222;
   margin-bottom: 1.25rem;
 }
 
-/* CTA Button */
-.primary-cta-content-wrapper .cta-button {
+/* Button */
+.primary-cta-content .cta-button {
   display: inline-block;
   padding: 14px 28px;
   background-color: #0077c8;
-  color: #fff !important;
-  font-weight: 600;
+  color: #fff;
   border-radius: 4px;
+  font-weight: 600;
   text-decoration: none;
-  transition: background-color 0.3s ease;
 }
 
-.primary-cta-content-wrapper .cta-button:hover {
+.primary-cta-content .cta-button:hover {
   background-color: #005ea8;
 }

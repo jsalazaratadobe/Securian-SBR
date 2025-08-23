@@ -1,24 +1,24 @@
 export default function decorate(block) {
-  // Prefer UE-driven data attributes if present
-  const title = block.dataset.title || block.querySelector('h1, h2')?.textContent || '';
-  const body = block.dataset.body || block.querySelector('p')?.textContent || '';
-  const ctaText = block.dataset.ctaText || block.querySelector('input')?.value || 'Learn More';
-  const ctaHref = block.dataset.ctaLink || block.querySelector('a')?.getAttribute('href') || '#';
-  const image = block.querySelector('img');
+  // Grab dataset attributes that UE binds
+  const titleText = block.dataset.body || 'Your headline here'; // Body field in UI → Title on page
+  const bodyText = block.dataset.title || ''; // Title field in UI → Subtext on page
+  const buttonText = block.dataset.ctaText || 'Learn More';
+  const buttonLink = block.dataset.ctaLink || '#';
+  const img = block.querySelector('img');
 
-  // Build the structure UE expects
+  // Build HTML
   block.innerHTML = `
-    <div class="primary-cta-content-wrapper">
-      ${title ? `<h2>${title}</h2>` : ''}
-      ${body ? `<p>${body}</p>` : ''}
-      <a class="cta-button" href="${ctaHref}">${ctaText}</a>
+    <div class="primary-cta-content">
+      <h2 data-rich-text="body">${titleText}</h2>
+      ${bodyText ? `<p data-rich-text="title">${bodyText}</p>` : ''}
+      <a class="cta-button" data-rich-text="ctaText" href="${buttonLink}">${buttonText}</a>
     </div>
   `;
 
-  // Set background image
-  if (image) {
-    block.style.backgroundImage = `url(${image.src})`;
-    image.remove(); // we rely on bg instead
+  // Set background image if uploaded
+  if (img) {
+    block.style.backgroundImage = `url(${img.src})`;
+    img.remove();
   }
 
   block.classList.add('primary-cta');
