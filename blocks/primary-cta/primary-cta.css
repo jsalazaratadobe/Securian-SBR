@@ -88,3 +88,18 @@ html:not([data-aue]) .section:first-child .primary-cta {
 
 /* Make sure authoring stays stable in UE */
 [data-aue] .primary-cta { margin-top: 0; }
+/* Support both normalized .primary-cta-bg and legacy .primary-cta-background */
+.primary-cta-bg,
+.primary-cta-background {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: right center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* If legacy CSS-var approach is used somewhere else, honor it */
+.primary-cta-background {
+  background-image: var(--bg-url);
+}
