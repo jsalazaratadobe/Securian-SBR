@@ -1,0 +1,49 @@
+{
+  "id": "primary-cta",
+  "fields": [
+    {
+      "component": "text",
+      "name": "title",
+      "label": "Title",
+      "valueType": "string",
+      "value": "Work for yourself"
+    },
+    {
+      "component": "rich-text",
+      "name": "body",
+      "label": "Body",
+      "valueType": "string",
+      "value": "Receive monthly emails to help keep your finances in shape"
+    },
+    {
+      "component": "text",
+      "name": "ctaText",
+      "label": "Button Text",
+      "valueType": "string",
+      "value": "Learn More"
+    },
+    {
+      "component": "aem-content",
+      "name": "ctaLink",
+      "label": "Button Link",
+      "valueType": "string"
+    },
+    {
+      "component": "reference",
+      "name": "imageRef",
+      "label": "Background Image",
+      "valueType": "string"
+    },
+    {
+      "component": "text",
+      "name": "alt",
+      "label": "Image Alt Text",
+      "valueType": "string",
+      "value": ""
+    }
+  ],
+  "styles": [
+    { "name": "Left Overlay", "class": "left" },
+    { "name": "Right Overlay", "class": "right" }
+  ]
+}

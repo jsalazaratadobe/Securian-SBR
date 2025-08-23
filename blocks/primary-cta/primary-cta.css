@@ -1,59 +1,123 @@
 .primary-cta {
-  display: flex;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: clamp(360px, 48vw, 620px);
   align-items: center;
-  min-height: 440px;
-  padding: 60px 40px;
+  overflow: hidden;
+  /* sit below fixed header on published pages */
+  margin-top: var(--nav-offset, 0);
+}
+
+header + main .primary-cta {
+  /* if your header sets --nav-height, this will prevent overlap */
+  --nav-offset: var(--nav-height, 90px);
+}
+
+/* Background image layer */
+.primary-cta-background {
+  position: absolute;
+  inset: 0;
+  background-image: var(--bg-img, none);
   background-size: cover;
-  background-position: center;
-  position: relative;
+  background-position: center right;
+  z-index: 1;
 }
 
-.primary-cta-content {
-  position: relative;
-  max-width: 520px;
-  padding: 40px 32px;
-  z-index: 2;
-}
-
-/* White circle overlay */
-.primary-cta-content::before {
+/* Soft white circle (panel background) */
+.primary-cta::before {
   content: '';
   position: absolute;
+  z-index: 2;
+  /* default: left overlay */
+  left: -20%;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 520px;
-  height: 520px;
-  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-50%);
+  width: clamp(420px, 45vw, 760px);
+  height: clamp(420px, 45vw, 760px);
+  background: rgba(255, 255, 255, 0.92);
   border-radius: 50%;
-  z-index: -1;
+  filter: drop-shadow(0 2px 12px rgba(0,0,0,0.06));
+}
+
+/* Right style flips the circle */
+.primary-cta[data-align="right"]::before {
+  left: auto;
+  right: -20%;
+}
+
+/* Content stack */
+.primary-cta-content {
+  position: relative;
+  z-index: 3;
+  padding: clamp(16px, 4vw, 56px);
+  max-width: min(720px, 86vw);
+  margin-left: clamp(16px, 6vw, 120px); /* push off the left a bit */
+}
+
+.primary-cta[data-align="right"] .primary-cta-content {
+  margin-left: auto;
+  margin-right: clamp(16px, 6vw, 120px);
 }
 
 /* Typography */
 .primary-cta-content h2 {
-  font-size: 2.5rem;
-  color: #007a33;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  color: #007a33; /* Securian green */
+  font-size: clamp(28px, 5vw, 56px);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  margin: 0 0 12px;
 }
 
 .primary-cta-content p {
-  font-size: 1.125rem;
-  color: #222;
-  margin-bottom: 1.25rem;
+  color: #1a1a1a;
+  font-size: clamp(16px, 2.2vw, 20px);
+  line-height: 1.5;
+  margin: 0 0 20px;
 }
 
-/* Button */
-.primary-cta-content .cta-button {
-  display: inline-block;
-  padding: 14px 28px;
-  background-color: #0077c8;
+/* CTA button */
+.primary-cta .cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  border-radius: 8px;
+  background: #0067c5;     /* Securian blue */
   color: #fff;
-  border-radius: 4px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 16px;
   text-decoration: none;
+  box-shadow: 0 1px 0 rgba(0,0,0,.06);
+  transition: background .2s ease, transform .05s ease-in;
 }
 
-.primary-cta-content .cta-button:hover {
-  background-color: #005ea8;
+.primary-cta .cta-button:hover {
+  background: #005aa8;
+}
+
+.primary-cta .cta-button:active {
+  transform: translateY(1px);
+}
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .primary-cta::before {
+    left: -35%;
+    width: clamp(380px, 70vw, 560px);
+    height: clamp(380px, 70vw, 560px);
+  }
+  .primary-cta[data-align="right"]::before {
+    left: auto;
+    right: -35%;
+  }
+
+  .primary-cta-content {
+    margin-left: clamp(12px, 5vw, 60px);
+  }
+
+  .primary-cta[data-align="right"] .primary-cta-content {
+    margin-right: clamp(12px, 5vw, 60px);
+  }
 }
