@@ -23,16 +23,16 @@
        data-aue-label="Button Text"
        data-aue-type="text">Click Here</a>
 
-    <!-- These two props are “data only”: form-editable but visually hidden -->
-    <span class="primary-cta__btn-link"
-          data-aue-prop="btn-link"
-          data-aue-label="Button Link"
-          data-aue-type="text">#</span>
+    <!-- UE injects the chosen link INSIDE this container -->
+    <div class="primary-cta__btn-link"
+         data-aue-prop="btn-link"
+         data-aue-label="Button Link"
+         data-aue-type="aem-content"></div>
 
-    <img class="primary-cta__img-prop"
-         alt=""
+    <!-- UE injects the selected asset INSIDE this container -->
+    <div class="primary-cta__image"
          data-aue-prop="image"
          data-aue-label="Background Image"
-         data-aue-type="reference" />
+         data-aue-type="reference"></div>
   </div>
 </div>

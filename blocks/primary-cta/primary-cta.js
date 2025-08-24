@@ -1,42 +1,56 @@
+function getAssetUrl(imgContainer) {
+  if (!imgContainer) return '';
+  // When UE injects the asset, it typically adds an <img> or <picture><img>
+  const img = imgContainer.querySelector('img');
+  if (img && img.src) return img.src;
+
+  // fallback: some variants use <source srcset="...">
+  const source = imgContainer.querySelector('source[srcset]');
+  if (source) {
+    const set = source.getAttribute('srcset') || '';
+    // grab the first URL from srcset
+    const first = set.split(',')[0]?.trim().split(' ')[0];
+    return first || '';
+  }
+  return '';
+}
+
+function setBackgroundFromContainer(bgEl, imgContainer) {
+  const url = getAssetUrl(imgContainer);
+  if (url && bgEl) bgEl.style.backgroundImage = `url("${url}")`;
+}
+
+function syncButtonHref(button, linkContainer) {
+  if (!button || !linkContainer) return;
+  // UE might inject an <a>, or text content with a path
+  const a = linkContainer.querySelector('a[href]');
+  const raw = (linkContainer.textContent || '').trim();
+  const href = a?.getAttribute('href') || raw || '#';
+  button.setAttribute('href', href);
+  button.setAttribute('aria-label', button.textContent.trim());
+}
+
 export default function decorate(block) {
-  // grab key elements
   const bgEl     = block.querySelector('.primary-cta__bg');
-  const linkEl   = block.querySelector('.primary-cta__btn-link');
+  const linkBox  = block.querySelector('.primary-cta__btn-link');
   const btnEl    = block.querySelector('.primary-cta__button');
-  const imgEl    = block.querySelector('.primary-cta__img-prop');
+  const imgBox   = block.querySelector('.primary-cta__image');
 
-  // --- 1) Paint background from the referenced image ---
-  const setBgFromImg = () => {
-    if (!imgEl) return;
-    const src = imgEl.getAttribute('src') || imgEl.getAttribute('data-src') || '';
-    if (src && bgEl) {
-      bgEl.style.backgroundImage = `url("${src}")`;
-    }
-  };
-  setBgFromImg();
-
-  // observe changes to image src (UE updates it)
-  if (imgEl) {
-    const moImg = new MutationObserver(setBgFromImg);
-    moImg.observe(imgEl, { attributes: true, attributeFilter: ['src', 'data-src'] });
+  // 1) Background image from UE-injected asset
+  setBackgroundFromContainer(bgEl, imgBox);
+  if (imgBox) {
+    const moImg = new MutationObserver(() => setBackgroundFromContainer(bgEl, imgBox));
+    moImg.observe(imgBox, { childList: true, subtree: true, attributes: true });
   }
 
-  // --- 2) Keep the button href in sync with the hidden link text ---
-  const syncHref = () => {
-    if (!linkEl || !btnEl) return;
-    const url = (linkEl.textContent || '').trim();
-    btnEl.setAttribute('href', url || '#');
-    btnEl.setAttribute('aria-label', btnEl.textContent.trim());
-  };
-  syncHref();
-
-  if (linkEl) {
-    const moLink = new MutationObserver(syncHref);
-    moLink.observe(linkEl, { childList: true, subtree: true, characterData: true });
+  // 2) Keep button href in sync with UE-injected link
+  syncButtonHref(btnEl, linkBox);
+  if (linkBox) {
+    const moLink = new MutationObserver(() => syncButtonHref(btnEl, linkBox));
+    moLink.observe(linkBox, { childList: true, subtree: true, attributes: true, characterData: true });
   }
 
-  // Defensive: if author pastes an <img> directly inside the block,
-  // convert it to background then remove it to avoid double-visuals.
+  // 3) Defensive: if an author pasted an <img> directly, convert to bg
   const strayImg = block.querySelector(':scope > img');
   if (strayImg && bgEl) {
     bgEl.style.backgroundImage = `url("${strayImg.src}")`;

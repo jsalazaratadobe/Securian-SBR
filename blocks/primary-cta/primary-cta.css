@@ -45,7 +45,7 @@ header + main .primary-cta {
   max-width: min(680px, 90vw);
 }
 
-/* Title should be green */
+/* Title should be green + bold */
 .primary-cta__title {
   margin: 0;
   font-size: clamp(28px, 5vw, 56px);
@@ -83,10 +83,9 @@ header + main .primary-cta {
   transform: translateY(-1px);
 }
 
-/* Hide the raw link + img “data only” props visually,
-   but keep them in the DOM so UE can bind to them. */
+/* Hide the raw link & image containers (UE renders inside these) */
 .primary-cta__btn-link,
-.primary-cta__img-prop {
+.primary-cta__image {
   position: absolute !important;
   width: 1px; height: 1px;
   overflow: hidden;
@@ -94,6 +93,9 @@ header + main .primary-cta {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* Safety: hide anything UE injects inside those containers visually */
+.primary-cta__btn-link *,.primary-cta__image * { display: none !important; }
 
 /* Tighter layout on smaller screens */
 @media (max-width: 900px) {
