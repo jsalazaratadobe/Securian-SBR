@@ -1,20 +1,20 @@
 <div class="primary-cta">
-  <div class="primary-cta-background"></div>
-
+  <!-- background layer is injected/normalized by JS -->
   <div class="primary-cta-content-wrapper">
     <div class="primary-cta-content">
-      <h2 class="primary-cta-title" data-rich-text="title">Work for yourself</h2>
-      <p class="primary-cta-body" data-rich-text="body">Your subheading goes here.</p>
+      <!-- Body field = big green headline -->
+      <h2 class="primary-cta-title" data-rich-text="body">Your headline here</h2>
 
+      <!-- Title field = smaller supporting copy -->
+      <p class="primary-cta-body" data-rich-text="title">Short supporting sentence.</p>
+
+      <!-- Blue CTA button (text is editable); href is synced from the hidden span below -->
       <a class="cta-button" href="#">
         <span data-rich-text="ctaText">Learn more</span>
       </a>
 
-      <!-- This hidden node allows UE to store/edit the link value, JS syncs it to the href -->
-      <span data-rich-text="ctaLink" hidden>#</span>
-
-      <!-- Hidden alt text value if you want to expose an alt field -->
-      <span data-rich-text="imageAlt" hidden=""></span>
+      <!-- Keep UE’s editable URL, but hide it visually -->
+      <span class="sr-only" data-rich-text="ctaLink">/content/guidehouse/placeholders</span>
     </div>
   </div>
 </div>
