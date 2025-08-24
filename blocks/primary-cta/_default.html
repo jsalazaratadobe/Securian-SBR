@@ -1,22 +1,19 @@
 <div class="primary-cta">
-  <!-- JS will normalize/create this bg element -->
-  <div class="primary-cta-bg" aria-hidden="true"></div>
+  <!-- optional author image (UE or pasted) – JS will convert to CSS bg and remove -->
+  <picture><!-- author may drop an asset here --></picture>
 
+  <!-- content & circle wrapper -->
   <div class="primary-cta-content-wrapper">
     <div class="primary-cta-content">
-      <!-- Body field = big green headline -->
-      <h2 class="primary-cta-title" data-rich-text="body">Your headline here</h2>
+      <h2 class="primary-cta-title" data-rich-text="title">Work for yourself</h2>
+      <p class="primary-cta-body" data-rich-text="body">Receive monthly emails to help keep your finances in shape</p>
 
-      <!-- Title field = smaller supporting copy -->
-      <p class="primary-cta-body" data-rich-text="title">Short supporting sentence.</p>
-
-      <!-- CTA button; text is editable, href is synced from hidden link field -->
       <a class="cta-button" href="#">
         <span data-rich-text="ctaText">Learn more</span>
       </a>
 
-      <!-- Keep UE’s editable URL, but visually hide it -->
-      <span class="sr-only" data-rich-text="ctaLink">/content/guidehouse/placeholders</span>
+      <!-- hidden field to edit the URL in the form/UE side panel -->
+      <span class="sr-only" data-rich-text="ctaLink">#</span>
     </div>
   </div>
 </div>
