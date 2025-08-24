@@ -1,89 +1,72 @@
 export default function decorate(block) {
-  // Ensure background wrapper exists
-  if (!block.querySelector('.primary-cta-background')) {
-    const bg = document.createElement('div');
+  // Ensure required shells exist
+  let bg = block.querySelector('.primary-cta-background');
+  if (!bg) {
+    bg = document.createElement('div');
     bg.className = 'primary-cta-background';
     block.prepend(bg);
   }
+  let content = block.querySelector('.primary-cta-content');
+  if (!content) {
+    content = document.createElement('div');
+    content.className = 'primary-cta-content';
+    block.append(content);
+  }
 
-  // Turn any leading <img> into a CSS background and remove it
+  // Promote inline <img> to CSS background
   const inlineImg = block.querySelector('img');
-  const bgEl = block.querySelector('.primary-cta-background');
-  if (inlineImg && bgEl) {
-    bgEl.style.setProperty('--bg-url', `url("${inlineImg.src}")`);
-    inlineImg.remove();
+  if (inlineImg) {
+    bg.style.setProperty('--bg-url', `url("${inlineImg.src}")`);
+    inlineImg.closest('picture')?.remove();
   }
 
-  // Utility to wrap an element into a new tag while keeping data-rich-text
-  function wrap(node, tag, cls) {
-    if (!node) return null;
-    const wrapper = document.createElement(tag);
-    wrapper.className = cls;
-    wrapper.setAttribute('data-rich-text', node.dataset.richText || '');
-    wrapper.innerHTML = node.innerHTML;
-    node.replaceWith(wrapper);
-    return wrapper;
-  }
+  // Ensure the editable anchors exist (so UE form/inline can bind)
+  const ensureAnchor = (sel, tag, cls, rich) => {
+    let el = block.querySelector(sel);
+    if (!el) {
+      el = document.createElement(tag);
+      if (cls) el.className = cls;
+      if (rich) el.setAttribute('data-rich-text', rich);
+      content.append(el);
+    }
+    return el;
+  };
 
-  // Grab fields
-  const titleNode = block.querySelector('[data-rich-text="title"]');
-  const bodyNode = block.querySelector('[data-rich-text="body"]');
-  const ctaTextNode = block.querySelector('[data-rich-text="ctaText"]');
-  const ctaLinkNode = block.querySelector('[data-rich-text="ctaLink"]');
+  const titleEl   = ensureAnchor('[data-rich-text="title"]',   'h2', 'primary-cta-title', 'title');
+  const bodyEl    = ensureAnchor('[data-rich-text="body"]',    'p',  'primary-cta-body',  'body');
+  const ctaTextEl = ensureAnchor('[data-rich-text="ctaText"]', 'span','sr-only',          'ctaText');
+  const ctaLinkEl = ensureAnchor('[data-rich-text="ctaLink"]', 'span','sr-only',          'ctaLink');
 
-  // Content container
-  const content = document.createElement('div');
-  content.className = 'primary-cta-content';
-
-  // Title is the big green heading
-  if (titleNode && !titleNode.parentElement?.classList.contains('primary-cta-title')) {
-    const h2 = wrap(titleNode, 'h2', 'primary-cta-title');
-    content.appendChild(h2);
-  }
-
-  // Body is the smaller line
-  if (bodyNode && !bodyNode.parentElement?.classList.contains('primary-cta-body')) {
-    const p = wrap(bodyNode, 'p', 'primary-cta-body');
-    content.appendChild(p);
-  }
-
-  // CTA button
-  if (ctaTextNode || ctaLinkNode) {
-    const button = document.createElement('a');
+  // Ensure visible button exists
+  let button = block.querySelector('.cta-button');
+  if (!button) {
+    button = document.createElement('a');
     button.className = 'cta-button';
-    button.href = (ctaLinkNode?.textContent || '#').trim();
-    button.textContent = (ctaTextNode?.textContent || 'Learn More').trim();
     button.setAttribute('role', 'button');
-    content.appendChild(button);
-
-    // Sync link text changes → button href
-    if (ctaLinkNode) {
-      const syncHref = () => {
-        const url = (ctaLinkNode.textContent || '').trim();
-        if (url) button.setAttribute('href', url);
-      };
-      syncHref();
-      const mo = new MutationObserver(syncHref);
-      mo.observe(ctaLinkNode, { childList: true, subtree: true, characterData: true });
-    }
-
-    // Sync button label changes → aria-label
-    if (ctaTextNode) {
-      const syncText = () => {
-        const label = (ctaTextNode.textContent || '').trim();
-        if (label) {
-          button.textContent = label;
-          button.setAttribute('aria-label', label);
-        }
-      };
-      syncText();
-      const mo2 = new MutationObserver(syncText);
-      mo2.observe(ctaTextNode, { childList: true, subtree: true, characterData: true });
-    }
+    button.href = '#';
+    button.textContent = 'Learn More';
+    content.append(button);
   }
 
-  // Replace block content with bg + content
-  block.innerHTML = '';
-  block.append(bgEl, content);
-  block.classList.add('primary-cta');
+  // Sync helpers
+  const syncHref = () => {
+    const url = (ctaLinkEl.textContent || '').trim();
+    if (url) button.setAttribute('href', url);
+  };
+  const syncLabel = () => {
+    const label = (ctaTextEl.textContent || '').trim() || 'Learn More';
+    button.textContent = label;
+    button.setAttribute('aria-label', label);
+  };
+
+  // Initial sync
+  syncHref();
+  syncLabel();
+
+  // Live sync when UE edits the spans
+  const mo1 = new MutationObserver(syncHref);
+  mo1.observe(ctaLinkEl, { childList: true, subtree: true, characterData: true });
+
+  const mo2 = new MutationObserver(syncLabel);
+  mo2.observe(ctaTextEl, { childList: true, subtree: true, characterData: true });
 }

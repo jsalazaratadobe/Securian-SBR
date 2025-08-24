@@ -1,19 +1,17 @@
 <div class="primary-cta">
-  <!-- optional author image (UE or pasted) – JS will convert to CSS bg and remove -->
-  <picture><!-- author may drop an asset here --></picture>
+  <div class="primary-cta-background"></div>
 
-  <!-- content & circle wrapper -->
-  <div class="primary-cta-content-wrapper">
-    <div class="primary-cta-content">
-      <h2 class="primary-cta-title" data-rich-text="title">Work for yourself</h2>
-      <p class="primary-cta-body" data-rich-text="body">Receive monthly emails to help keep your finances in shape</p>
+  <div class="primary-cta-content">
+    <h2 class="primary-cta-title" data-rich-text="title">Title goes here</h2>
+    <p class="primary-cta-body" data-rich-text="body">Short supporting line.</p>
 
-      <a class="cta-button" href="#">
-        <span data-rich-text="ctaText">Learn more</span>
-      </a>
+    <!-- Keep link fields as text nodes so UE can edit them -->
+    <span class="sr-only" data-rich-text="ctaText">Learn More</span>
+    <span class="sr-only" data-rich-text="ctaLink">#</span>
 
-      <!-- hidden field to edit the URL in the form/UE side panel -->
-      <span class="sr-only" data-rich-text="ctaLink">#</span>
-    </div>
+    <a class="cta-button" role="button" href="#">Learn More</a>
+
+    <!-- Keep this image in authoring to become the background; runtime turns it into CSS bg -->
+    <picture><img src="" alt=""></picture>
   </div>
 </div>
