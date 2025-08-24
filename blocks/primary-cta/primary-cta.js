@@ -1,63 +1,45 @@
 export default function decorate(block) {
-  const wrapper = block.closest('.primary-cta-wrapper') || block;
-  const img = wrapper.querySelector('.primary-cta-img');
-  const content = wrapper.querySelector('.primary-cta-content');
-  const btn = content?.querySelector('.cta-button');
-  const btnTextSpan = content?.querySelector('[data-aue-prop="btn-text"]');
-  const btnLinkSpan = content?.querySelector('[data-aue-prop="btn-link"]');
-  const altSpan = content?.querySelector('[data-aue-prop="alt"]');
+  // grab key elements
+  const bgEl     = block.querySelector('.primary-cta__bg');
+  const linkEl   = block.querySelector('.primary-cta__btn-link');
+  const btnEl    = block.querySelector('.primary-cta__button');
+  const imgEl    = block.querySelector('.primary-cta__img-prop');
 
-  // 1) Background image via CSS var (keep the <img> for UE mapping)
-  const setBg = () => {
-    const src = img?.getAttribute('src') || '';
-    if (src) wrapper.style.setProperty('--bg-url', `url("${src}")`);
-  };
-  setBg();
-
-  // Observe image mutations (UE replaces the src)
-  if (img) {
-    const moImg = new MutationObserver(setBg);
-    moImg.observe(img, { attributes: true, attributeFilter: ['src'] });
-  }
-
-  // 2) Sync button href from hidden span
-  const setHref = () => {
-    if (!btn || !btnLinkSpan) return;
-    const url = (btnLinkSpan.textContent || '').trim();
-    if (url) btn.setAttribute('href', url);
-  };
-  setHref();
-
-  if (btnLinkSpan) {
-    const moLink = new MutationObserver(setHref);
-    moLink.observe(btnLinkSpan, { childList: true, subtree: true, characterData: true });
-  }
-
-  // 3) Keep aria-label in sync with button text for a11y
-  const setAria = () => {
-    if (btn && btnTextSpan) {
-      const t = (btnTextSpan.textContent || '').trim();
-      if (t) btn.setAttribute('aria-label', t);
+  // --- 1) Paint background from the referenced image ---
+  const setBgFromImg = () => {
+    if (!imgEl) return;
+    const src = imgEl.getAttribute('src') || imgEl.getAttribute('data-src') || '';
+    if (src && bgEl) {
+      bgEl.style.backgroundImage = `url("${src}")`;
     }
   };
-  setAria();
+  setBgFromImg();
 
-  if (btnTextSpan) {
-    const moText = new MutationObserver(setAria);
-    moText.observe(btnTextSpan, { childList: true, subtree: true, characterData: true });
+  // observe changes to image src (UE updates it)
+  if (imgEl) {
+    const moImg = new MutationObserver(setBgFromImg);
+    moImg.observe(imgEl, { attributes: true, attributeFilter: ['src', 'data-src'] });
   }
 
-  // 4) Optional: use "alt" as a label for the region
-  const setAlt = () => {
-    if (altSpan) {
-      const a = (altSpan.textContent || '').trim();
-      if (a) wrapper.setAttribute('aria-label', a);
-    }
+  // --- 2) Keep the button href in sync with the hidden link text ---
+  const syncHref = () => {
+    if (!linkEl || !btnEl) return;
+    const url = (linkEl.textContent || '').trim();
+    btnEl.setAttribute('href', url || '#');
+    btnEl.setAttribute('aria-label', btnEl.textContent.trim());
   };
-  setAlt();
+  syncHref();
 
-  if (altSpan) {
-    const moAlt = new MutationObserver(setAlt);
-    moAlt.observe(altSpan, { childList: true, subtree: true, characterData: true });
+  if (linkEl) {
+    const moLink = new MutationObserver(syncHref);
+    moLink.observe(linkEl, { childList: true, subtree: true, characterData: true });
+  }
+
+  // Defensive: if author pastes an <img> directly inside the block,
+  // convert it to background then remove it to avoid double-visuals.
+  const strayImg = block.querySelector(':scope > img');
+  if (strayImg && bgEl) {
+    bgEl.style.backgroundImage = `url("${strayImg.src}")`;
+    strayImg.remove();
   }
 }

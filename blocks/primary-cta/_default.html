@@ -1,11 +1,38 @@
-<div class="primary-cta-container">
-  <div class="primary-cta-bg"></div>
-  <div class="primary-cta-overlay"></div>
-  <div class="primary-cta-wrapper">
-    <h2 data-aue-prop="title" data-aue-label="Title" data-aue-type="text">This is the title</h2>
-    <p data-aue-prop="body" data-aue-label="Body" data-aue-type="richtext">This is the body</p>
-    <a class="cta-button" data-aue-prop="btn-text" data-aue-label="Button Text" data-aue-type="text" href="#">
-      Click Here
-    </a>
+<div class="primary-cta" data-block-name="primary-cta">
+  <!-- background image is painted here via JS -->
+  <div class="primary-cta__bg" aria-hidden="true"></div>
+
+  <!-- soft white circle -->
+  <div class="primary-cta__overlay" aria-hidden="true"></div>
+
+  <!-- content -->
+  <div class="primary-cta__content">
+    <h2 class="primary-cta__title"
+        data-aue-prop="title"
+        data-aue-label="Title"
+        data-aue-type="text">This is the title</h2>
+
+    <p class="primary-cta__body"
+       data-aue-prop="body"
+       data-aue-label="Body"
+       data-aue-type="richtext">This is the body</p>
+
+    <a class="primary-cta__button"
+       href="#"
+       data-aue-prop="btn-text"
+       data-aue-label="Button Text"
+       data-aue-type="text">Click Here</a>
+
+    <!-- These two props are “data only”: form-editable but visually hidden -->
+    <span class="primary-cta__btn-link"
+          data-aue-prop="btn-link"
+          data-aue-label="Button Link"
+          data-aue-type="text">#</span>
+
+    <img class="primary-cta__img-prop"
+         alt=""
+         data-aue-prop="image"
+         data-aue-label="Background Image"
+         data-aue-type="reference" />
   </div>
 </div>
