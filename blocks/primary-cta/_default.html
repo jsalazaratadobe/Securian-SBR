@@ -1,36 +1,11 @@
-<section class="primary-cta-wrapper">
-  <!-- Keep this <img> so UE can bind the "image" field; JS reads it, CSS hides it -->
-  <img class="primary-cta-img" data-aue-prop="image" data-aue-type="reference" alt=""
-       src="" />
-
-  <!-- Content (z=3) -->
-  <div class="primary-cta-content">
-    <!-- Small strap: Title field -->
-    <p class="primary-cta-strap"
-       data-aue-prop="title"
-       data-aue-type="text">Title</p>
-
-    <!-- Big green headline: Body field -->
-    <h1 class="primary-cta-headline"
-        data-aue-prop="body"
-        data-aue-type="richtext"
-        data-aue-filter="text">Work for yourself</h1>
-
-    <!-- Button -->
-    <p class="button-container">
-      <a class="cta-button" href="#">
-        <span data-aue-prop="btn-text" data-aue-type="text">Learn more</span>
-      </a>
-    </p>
-
-    <!-- Hidden, editable link field (JS syncs it to the anchor href) -->
-    <span class="aue-hidden"
-          data-aue-prop="btn-link"
-          data-aue-type="aem-content">/content</span>
-
-    <!-- Optional alt text (kept for UE; used for aria on wrapper) -->
-    <span class="aue-hidden"
-          data-aue-prop="alt"
-          data-aue-type="text"></span>
+<div class="primary-cta-container">
+  <div class="primary-cta-bg"></div>
+  <div class="primary-cta-overlay"></div>
+  <div class="primary-cta-wrapper">
+    <h2 data-aue-prop="title" data-aue-label="Title" data-aue-type="text">This is the title</h2>
+    <p data-aue-prop="body" data-aue-label="Body" data-aue-type="richtext">This is the body</p>
+    <a class="cta-button" data-aue-prop="btn-text" data-aue-label="Button Text" data-aue-type="text" href="#">
+      Click Here
+    </a>
   </div>
-</section>
+</div>

@@ -1,89 +1,68 @@
-/* Layering & layout */
-.primary-cta-wrapper {
+.primary-cta-container {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 400px; /* adjust as needed */
+  padding: 60px 40px;
+  margin-top: 40px; /* prevents overlap with header */
   overflow: hidden;
-  isolation: isolate; /* keep z-index context */
-  /* Minimum top padding in case the parent section is "section-none" and header is fixed */
-  padding-top: clamp(24px, 6vw, 96px);
 }
 
-/* Background image layer (z=1) driven by CSS variable */
-.primary-cta-wrapper::after {
-  content: "";
+.primary-cta-bg {
   position: absolute;
-  inset: 0;
-  background: var(--bg-url, none) center/cover no-repeat;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+
+.primary-cta-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 70%;
+  height: 100%;
+  background: radial-gradient(circle at left center, rgba(255,255,255,0.95) 60%, transparent 100%);
   z-index: 1;
 }
 
-/* Keep the UE-bound <img> in DOM but invisible */
-.primary-cta-img {
-  position: absolute !important;
-  width: 1px; height: 1px;
-  opacity: 0; pointer-events: none;
-}
-
-/* White circle swoosh (z=2) */
-.primary-cta-wrapper::before {
-  content: "";
-  position: absolute;
-  z-index: 2;
-  left: max(-35%, -420px);
-  top: -20%;
-  width: min(900px, 80%);
-  aspect-ratio: 1/1;
-  background: rgba(255,255,255,0.88);
-  border-radius: 50%;
-  filter: blur(0.0001px); /* makes edges crisper on some GPUs */
-}
-
-/* Foreground content (z=3) */
-.primary-cta-content {
+.primary-cta-wrapper {
   position: relative;
-  z-index: 3;
-  padding: clamp(24px, 5vw, 64px);
-  max-width: 680px;
+  z-index: 2;
+  max-width: 600px;
 }
 
-/* Title (small strap) */
-.primary-cta-strap {
-  margin: 0 0 8px;
-  font-weight: 600;
-  color: #2f2f2f; /* neutral */
+.primary-cta-wrapper h1,
+.primary-cta-wrapper h2,
+.primary-cta-wrapper .title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #007a33; /* green for title */
+  margin-bottom: 16px;
 }
 
-/* Body (big green headline) */
-.primary-cta-headline {
-  margin: 0 0 16px;
-  color: #0e7a39;               /* Securian green */
-  font-size: clamp(28px, 6vw, 64px);
-  line-height: 1.05;
+.primary-cta-wrapper p,
+.primary-cta-wrapper .body {
+  font-size: 1.2rem;
+  color: #000; /* black for body */
+  margin-bottom: 24px;
 }
 
-/* Button */
-.button-container { margin-top: 8px; }
-.cta-button {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  text-decoration: none;
-  background: #0a5bd3;          /* blue CTA */
+.primary-cta-wrapper .cta-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #0056a4; /* blue button */
   color: #fff;
-  padding: 12px 18px;
-  border-radius: 8px;
-  font-weight: 700;
+  font-weight: bold;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
 }
-.cta-button:focus-visible { outline: 3px solid #002a66; outline-offset: 2px; }
 
-/* Visually hidden but still in the DOM for UE binding */
-.aue-hidden {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0 0 0 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
+.primary-cta-wrapper .cta-button:hover {
+  background-color: #004080;
 }
