@@ -1,80 +1,89 @@
-/* Place the whole block below the sticky header when NOT in UE */
-:root { --nav-height: 96px; }
-header + main .primary-cta-container,
-main .primary-cta-container { margin-top: var(--nav-height); }
-
-/* Block */
-.primary-cta {
+/* Layering & layout */
+.primary-cta-wrapper {
   position: relative;
   overflow: hidden;
+  isolation: isolate; /* keep z-index context */
+  /* Minimum top padding in case the parent section is "section-none" and header is fixed */
+  padding-top: clamp(24px, 6vw, 96px);
 }
 
-/* BG image turned into a CSS background by JS */
-.primary-cta-background {
-  position: absolute;
-  inset: 0;
-  background-image: var(--bg-url);
-  background-size: cover;
-  background-position: center;
-  z-index: 1; /* behind content */
-}
-
-/* Content layer */
-.primary-cta-content {
-  position: relative;
-  z-index: 2; /* above background */
-  max-width: 640px;
-  padding: 3rem 1.25rem 4rem;
-}
-
-/* White circle */
-.primary-cta-content::before {
+/* Background image layer (z=1) driven by CSS variable */
+.primary-cta-wrapper::after {
   content: "";
   position: absolute;
-  left: -20%;
-  top: 0;
-  width: 48vw;           /* responsive circle */
-  max-width: 680px;
+  inset: 0;
+  background: var(--bg-url, none) center/cover no-repeat;
+  z-index: 1;
+}
+
+/* Keep the UE-bound <img> in DOM but invisible */
+.primary-cta-img {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  opacity: 0; pointer-events: none;
+}
+
+/* White circle swoosh (z=2) */
+.primary-cta-wrapper::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  left: max(-35%, -420px);
+  top: -20%;
+  width: min(900px, 80%);
   aspect-ratio: 1/1;
   background: rgba(255,255,255,0.88);
   border-radius: 50%;
-  z-index: -1;
-  transform: translateY(-15%);
+  filter: blur(0.0001px); /* makes edges crisper on some GPUs */
 }
 
-/* Title (Green) */
-.primary-cta-title {
-  margin: 0 0 .5rem;
-  font-size: clamp(2rem, 4vw + 1rem, 3rem);
-  line-height: 1.1;
-  color: #007a33;        /* Securian green */
-  font-weight: 700;
+/* Foreground content (z=3) */
+.primary-cta-content {
+  position: relative;
+  z-index: 3;
+  padding: clamp(24px, 5vw, 64px);
+  max-width: 680px;
 }
 
-/* Body */
-.primary-cta-body {
-  margin: 0 0 1rem;
-  font-size: clamp(1rem, 1.1vw + .8rem, 1.25rem);
-  color: #123;
+/* Title (small strap) */
+.primary-cta-strap {
+  margin: 0 0 8px;
+  font-weight: 600;
+  color: #2f2f2f; /* neutral */
 }
 
-/* Button (Blue) */
+/* Body (big green headline) */
+.primary-cta-headline {
+  margin: 0 0 16px;
+  color: #0e7a39;               /* Securian green */
+  font-size: clamp(28px, 6vw, 64px);
+  line-height: 1.05;
+}
+
+/* Button */
+.button-container { margin-top: 8px; }
 .cta-button {
-  display: inline-block;
-  padding: 12px 24px;
-  border-radius: 4px;
-  background: #0067c5;
-  color: #fff;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
   text-decoration: none;
+  background: #0a5bd3;          /* blue CTA */
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: 700;
 }
-.cta-button:hover { background: #0056a7; }
+.cta-button:focus-visible { outline: 3px solid #002a66; outline-offset: 2px; }
 
-/* Hide the raw text fields we use for UE form editing */
-.sr-only {
+/* Visually hidden but still in the DOM for UE binding */
+.aue-hidden {
   position: absolute !important;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0 0 0 0);
-  white-space: nowrap; border: 0;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }

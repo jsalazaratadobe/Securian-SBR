@@ -1,72 +1,63 @@
 export default function decorate(block) {
-  // Ensure required shells exist
-  let bg = block.querySelector('.primary-cta-background');
-  if (!bg) {
-    bg = document.createElement('div');
-    bg.className = 'primary-cta-background';
-    block.prepend(bg);
-  }
-  let content = block.querySelector('.primary-cta-content');
-  if (!content) {
-    content = document.createElement('div');
-    content.className = 'primary-cta-content';
-    block.append(content);
+  const wrapper = block.closest('.primary-cta-wrapper') || block;
+  const img = wrapper.querySelector('.primary-cta-img');
+  const content = wrapper.querySelector('.primary-cta-content');
+  const btn = content?.querySelector('.cta-button');
+  const btnTextSpan = content?.querySelector('[data-aue-prop="btn-text"]');
+  const btnLinkSpan = content?.querySelector('[data-aue-prop="btn-link"]');
+  const altSpan = content?.querySelector('[data-aue-prop="alt"]');
+
+  // 1) Background image via CSS var (keep the <img> for UE mapping)
+  const setBg = () => {
+    const src = img?.getAttribute('src') || '';
+    if (src) wrapper.style.setProperty('--bg-url', `url("${src}")`);
+  };
+  setBg();
+
+  // Observe image mutations (UE replaces the src)
+  if (img) {
+    const moImg = new MutationObserver(setBg);
+    moImg.observe(img, { attributes: true, attributeFilter: ['src'] });
   }
 
-  // Promote inline <img> to CSS background
-  const inlineImg = block.querySelector('img');
-  if (inlineImg) {
-    bg.style.setProperty('--bg-url', `url("${inlineImg.src}")`);
-    inlineImg.closest('picture')?.remove();
+  // 2) Sync button href from hidden span
+  const setHref = () => {
+    if (!btn || !btnLinkSpan) return;
+    const url = (btnLinkSpan.textContent || '').trim();
+    if (url) btn.setAttribute('href', url);
+  };
+  setHref();
+
+  if (btnLinkSpan) {
+    const moLink = new MutationObserver(setHref);
+    moLink.observe(btnLinkSpan, { childList: true, subtree: true, characterData: true });
   }
 
-  // Ensure the editable anchors exist (so UE form/inline can bind)
-  const ensureAnchor = (sel, tag, cls, rich) => {
-    let el = block.querySelector(sel);
-    if (!el) {
-      el = document.createElement(tag);
-      if (cls) el.className = cls;
-      if (rich) el.setAttribute('data-rich-text', rich);
-      content.append(el);
+  // 3) Keep aria-label in sync with button text for a11y
+  const setAria = () => {
+    if (btn && btnTextSpan) {
+      const t = (btnTextSpan.textContent || '').trim();
+      if (t) btn.setAttribute('aria-label', t);
     }
-    return el;
   };
+  setAria();
 
-  const titleEl   = ensureAnchor('[data-rich-text="title"]',   'h2', 'primary-cta-title', 'title');
-  const bodyEl    = ensureAnchor('[data-rich-text="body"]',    'p',  'primary-cta-body',  'body');
-  const ctaTextEl = ensureAnchor('[data-rich-text="ctaText"]', 'span','sr-only',          'ctaText');
-  const ctaLinkEl = ensureAnchor('[data-rich-text="ctaLink"]', 'span','sr-only',          'ctaLink');
-
-  // Ensure visible button exists
-  let button = block.querySelector('.cta-button');
-  if (!button) {
-    button = document.createElement('a');
-    button.className = 'cta-button';
-    button.setAttribute('role', 'button');
-    button.href = '#';
-    button.textContent = 'Learn More';
-    content.append(button);
+  if (btnTextSpan) {
+    const moText = new MutationObserver(setAria);
+    moText.observe(btnTextSpan, { childList: true, subtree: true, characterData: true });
   }
 
-  // Sync helpers
-  const syncHref = () => {
-    const url = (ctaLinkEl.textContent || '').trim();
-    if (url) button.setAttribute('href', url);
+  // 4) Optional: use "alt" as a label for the region
+  const setAlt = () => {
+    if (altSpan) {
+      const a = (altSpan.textContent || '').trim();
+      if (a) wrapper.setAttribute('aria-label', a);
+    }
   };
-  const syncLabel = () => {
-    const label = (ctaTextEl.textContent || '').trim() || 'Learn More';
-    button.textContent = label;
-    button.setAttribute('aria-label', label);
-  };
+  setAlt();
 
-  // Initial sync
-  syncHref();
-  syncLabel();
-
-  // Live sync when UE edits the spans
-  const mo1 = new MutationObserver(syncHref);
-  mo1.observe(ctaLinkEl, { childList: true, subtree: true, characterData: true });
-
-  const mo2 = new MutationObserver(syncLabel);
-  mo2.observe(ctaTextEl, { childList: true, subtree: true, characterData: true });
+  if (altSpan) {
+    const moAlt = new MutationObserver(setAlt);
+    moAlt.observe(altSpan, { childList: true, subtree: true, characterData: true });
+  }
 }

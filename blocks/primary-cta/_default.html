@@ -1,17 +1,36 @@
-<div class="primary-cta">
-  <div class="primary-cta-background"></div>
+<section class="primary-cta-wrapper">
+  <!-- Keep this <img> so UE can bind the "image" field; JS reads it, CSS hides it -->
+  <img class="primary-cta-img" data-aue-prop="image" data-aue-type="reference" alt=""
+       src="" />
 
+  <!-- Content (z=3) -->
   <div class="primary-cta-content">
-    <h2 class="primary-cta-title" data-rich-text="title">Title goes here</h2>
-    <p class="primary-cta-body" data-rich-text="body">Short supporting line.</p>
+    <!-- Small strap: Title field -->
+    <p class="primary-cta-strap"
+       data-aue-prop="title"
+       data-aue-type="text">Title</p>
 
-    <!-- Keep link fields as text nodes so UE can edit them -->
-    <span class="sr-only" data-rich-text="ctaText">Learn More</span>
-    <span class="sr-only" data-rich-text="ctaLink">#</span>
+    <!-- Big green headline: Body field -->
+    <h1 class="primary-cta-headline"
+        data-aue-prop="body"
+        data-aue-type="richtext"
+        data-aue-filter="text">Work for yourself</h1>
 
-    <a class="cta-button" role="button" href="#">Learn More</a>
+    <!-- Button -->
+    <p class="button-container">
+      <a class="cta-button" href="#">
+        <span data-aue-prop="btn-text" data-aue-type="text">Learn more</span>
+      </a>
+    </p>
 
-    <!-- Keep this image in authoring to become the background; runtime turns it into CSS bg -->
-    <picture><img src="" alt=""></picture>
+    <!-- Hidden, editable link field (JS syncs it to the anchor href) -->
+    <span class="aue-hidden"
+          data-aue-prop="btn-link"
+          data-aue-type="aem-content">/content</span>
+
+    <!-- Optional alt text (kept for UE; used for aria on wrapper) -->
+    <span class="aue-hidden"
+          data-aue-prop="alt"
+          data-aue-type="text"></span>
   </div>
-</div>
+</section>
