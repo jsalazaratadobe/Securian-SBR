@@ -43,11 +43,10 @@ export default function decorate(block) {
     moImg.observe(imgBox, { childList: true, subtree: true, attributes: true });
   }
 
-  // 2) Keep button href in sync with UE-injected link
-  syncButtonHref(btnEl, linkBox);
-  if (linkBox) {
-    const moLink = new MutationObserver(() => syncButtonHref(btnEl, linkBox));
-    moLink.observe(linkBox, { childList: true, subtree: true, attributes: true, characterData: true });
+  syncButtonHref(btnEl, btnLink);
+  if (btnLink) {
+    const moLink = new MutationObserver(() => syncButtonHref(btnEl, btnLink));
+    moLink.observe(btnLink, { childList: true, subtree: true, attributes: true, characterData: true });
   }
 
   // 3) Defensive: if an author pasted an <img> directly, convert to bg

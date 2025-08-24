@@ -1,38 +1,41 @@
-<div class="primary-cta" data-block-name="primary-cta">
-  <!-- background image is painted here via JS -->
+<div class="primary-cta block">
+  <!-- Background layer (CSS background-image) -->
   <div class="primary-cta__bg" aria-hidden="true"></div>
 
-  <!-- soft white circle -->
-  <div class="primary-cta__overlay" aria-hidden="true"></div>
+  <!-- Author-editable image target (hidden visually, used by UE to attach the asset) -->
+  <div class="primary-cta__image"
+       data-aue-prop="image"
+       data-aue-label="Background Image"
+       data-aue-type="asset">
+    <!-- empty; UE will inject <picture><img ...> here -->
+  </div>
 
-  <!-- content -->
   <div class="primary-cta__content">
-    <h2 class="primary-cta__title"
-        data-aue-prop="title"
-        data-aue-label="Title"
-        data-aue-type="text">This is the title</h2>
+    <h2 class="primary-cta__title">
+      <span data-aue-prop="title"
+            data-aue-label="Title"
+            data-aue-type="text">This is the title</span>
+    </h2>
 
-    <p class="primary-cta__body"
-       data-aue-prop="body"
-       data-aue-label="Body"
-       data-aue-type="richtext">This is the body</p>
+    <div class="primary-cta__body"
+         data-aue-prop="body"
+         data-aue-label="Body"
+         data-aue-type="richtext"
+         data-aue-filter="text">
+      <p>this is the body in <code>p</code> class</p>
+      <h2>and this is the body with h2 class</h2>
+    </div>
 
-    <a class="primary-cta__button"
-       href="#"
-       data-aue-prop="btn-text"
-       data-aue-label="Button Text"
-       data-aue-type="text">Click Here</a>
+    <a class="primary-cta__button" href="#">
+      <span data-aue-prop="btn-text"
+            data-aue-label="Button Text"
+            data-aue-type="text">Learn more</span>
+    </a>
 
-    <!-- UE injects the chosen link INSIDE this container -->
-    <div class="primary-cta__btn-link"
-         data-aue-prop="btn-link"
-         data-aue-label="Button Link"
-         data-aue-type="aem-content"></div>
-
-    <!-- UE injects the selected asset INSIDE this container -->
-    <div class="primary-cta__image"
-         data-aue-prop="image"
-         data-aue-label="Background Image"
-         data-aue-type="reference"></div>
+    <!-- Hidden, bound link field that JS mirrors into the button href -->
+    <p class="primary-cta__btn-link"
+       data-aue-prop="btn-link"
+       data-aue-label="Button Link"
+       data-aue-type="text">/content/dam</p>
   </div>
 </div>

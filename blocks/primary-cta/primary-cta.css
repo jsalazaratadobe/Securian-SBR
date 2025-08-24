@@ -1,110 +1,101 @@
-/* Root block */
 .primary-cta {
+  --green: #007a33;       /* Securian green */
+  --blue:  #0067c5;       /* Securian blue */
+  --shadow: 0 6px 18px rgba(0,0,0,0.12);
+
   position: relative;
   overflow: hidden;
-  min-height: 520px;
-  display: grid;
-  align-items: center;
-}
-
-/* keep this block below the fixed header when outside UE */
-header + main .primary-cta {
+  padding: 56px 0 24px;
+  /* keep the block from tucking under a sticky header when viewed outside UE */
   margin-top: var(--nav-height, 96px);
 }
 
-/* full-bleed background, painted by JS */
 .primary-cta__bg {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 1;
+  background-position: center right;
+  z-index: 0;
 }
 
-/* white circular overlay */
-.primary-cta__overlay {
-  position: absolute;
-  z-index: 2;
-  width: clamp(420px, 45vw, 740px);
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.88);
-  left: clamp(16px, 6vw, 72px);
-  top: clamp(24px, 8vh, 120px);
-  filter: blur(0.3px);
-}
-
-/* content stack */
+/* Content zone above the photo */
 .primary-cta__content {
   position: relative;
-  z-index: 3;
-  display: grid;
-  gap: 16px;
-  padding: clamp(20px, 4vw, 48px);
-  max-width: min(680px, 90vw);
+  z-index: 2;             /* text above bg */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px clamp(16px, 4vw, 40px);
 }
 
-/* Title should be green + bold */
+/* White circular overlay behind text */
+.primary-cta__content::before {
+  content: "";
+  position: absolute;
+  left: max(-220px, -18vw);
+  top: -140px;
+  width: clamp(420px, 58vw, 860px);
+  height: clamp(420px, 58vw, 860px);
+  border-radius: 50%;
+  background: rgba(255,255,255,0.93);
+  z-index: 1;             /* above bg, below text */
+}
+
+/* Title (only this is green) */
 .primary-cta__title {
-  margin: 0;
-  font-size: clamp(28px, 5vw, 56px);
-  line-height: 1.1;
-  font-weight: 700;
-  color: #007a33; /* Securian green */
+  position: relative;
+  z-index: 2;
+  margin: 0 0 12px;
+  font-size: clamp(28px, 5vw, 64px);
+  line-height: 1.05;
+  font-weight: 800;
+  color: var(--green);
 }
 
-/* Body normal text */
+/* Body copy sits above the circle, but not green */
 .primary-cta__body {
-  margin: 0;
-  font-size: clamp(16px, 2.2vw, 20px);
+  position: relative;
+  z-index: 2;
+  color: #111;
+  font-size: clamp(16px, 1.2vw, 20px);
   line-height: 1.5;
-  color: #1b1b1b;
+  max-width: 640px;
+  margin-bottom: 18px;
 }
 
-/* Button */
+/* If authors drop an <h2> inside the body, keep it black */
+.primary-cta__body h2 {
+  margin: 8px 0 0;
+  font: inherit;
+  color: inherit;
+}
+
+/* CTA button */
 .primary-cta__button {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 8px;
-  padding: 12px 24px;
-  background-color: #0067c5;  /* Securian blue */
-  color: #fff;
-  text-decoration: none;
-  font-weight: 700;
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  padding: 12px 22px;
   border-radius: 6px;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.05);
-  transition: transform 0.06s ease, background-color 0.2s ease;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  transition: transform .08s ease-out, box-shadow .2s ease-out, background .2s ease-out;
 }
-
 .primary-cta__button:hover {
-  background-color: #0056a5;
   transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0,0,0,.16);
+  background: #0057ad;
 }
 
-/* Hide the raw link & image containers (UE renders inside these) */
+/* The UE link + image placeholders: accessible to UE, hidden visually */
 .primary-cta__btn-link,
 .primary-cta__image {
   position: absolute !important;
   width: 1px; height: 1px;
+  padding: 0; margin: -1px;
   overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-/* Safety: hide anything UE injects inside those containers visually */
-.primary-cta__btn-link *,.primary-cta__image * { display: none !important; }
-
-/* Tighter layout on smaller screens */
-@media (max-width: 900px) {
-  .primary-cta {
-    min-height: 440px;
-  }
-  .primary-cta__overlay {
-    left: clamp(12px, 4vw, 40px);
-    top: clamp(12px, 6vh, 80px);
-    width: clamp(340px, 60vw, 520px);
-  }
+  clip: rect(0 0 0 0); clip-path: inset(50%);
+  border: 0;
 }
