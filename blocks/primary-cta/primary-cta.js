@@ -1,58 +1,108 @@
-function getAssetUrl(imgContainer) {
-  if (!imgContainer) return '';
-  // When UE injects the asset, it typically adds an <img> or <picture><img>
-  const img = imgContainer.querySelector('img');
-  if (img && img.src) return img.src;
-
-  // fallback: some variants use <source srcset="...">
-  const source = imgContainer.querySelector('source[srcset]');
-  if (source) {
-    const set = source.getAttribute('srcset') || '';
-    // grab the first URL from srcset
-    const first = set.split(',')[0]?.trim().split(' ')[0];
-    return first || '';
-  }
-  return '';
-}
-
-function setBackgroundFromContainer(bgEl, imgContainer) {
-  const url = getAssetUrl(imgContainer);
-  if (url && bgEl) bgEl.style.backgroundImage = `url("${url}")`;
-}
-
-function syncButtonHref(button, linkContainer) {
-  if (!button || !linkContainer) return;
-  // UE might inject an <a>, or text content with a path
-  const a = linkContainer.querySelector('a[href]');
-  const raw = (linkContainer.textContent || '').trim();
-  const href = a?.getAttribute('href') || raw || '#';
-  button.setAttribute('href', href);
-  button.setAttribute('aria-label', button.textContent.trim());
-}
-
+// Robust decorate that works with the UE markup you have today.
+// It restructures the block, overlays the image, adds the white circle,
+// builds a real <a> button, and keeps UE fields in sync (text + link).
 export default function decorate(block) {
-  const bgEl     = block.querySelector('.primary-cta__bg');
-  const linkBox  = block.querySelector('.primary-cta__btn-link');
-  const btnEl    = block.querySelector('.primary-cta__button');
-  const imgBox   = block.querySelector('.primary-cta__image');
+  try {
+    // 1) Identify UE-provided fields (be flexible!)
+    const titleEl =
+      block.querySelector('[data-aue-prop="title"]') ||
+      block.querySelector('p, h1, h2');
 
-  // 1) Background image from UE-injected asset
-  setBackgroundFromContainer(bgEl, imgBox);
-  if (imgBox) {
-    const moImg = new MutationObserver(() => setBackgroundFromContainer(bgEl, imgBox));
-    moImg.observe(imgBox, { childList: true, subtree: true, attributes: true });
-  }
+    // UE renders body as a richtext container; allow both div/p
+    const bodyEl =
+      block.querySelector('[data-aue-prop="body"]') ||
+      block.querySelector('[data-aue-filter="richtext"]') ||
+      block.querySelector('div');
 
-  syncButtonHref(btnEl, btnLink);
-  if (btnLink) {
-    const moLink = new MutationObserver(() => syncButtonHref(btnEl, btnLink));
-    moLink.observe(btnLink, { childList: true, subtree: true, attributes: true, characterData: true });
-  }
+    const btnTextEl =
+      block.querySelector('[data-aue-prop="btn-text"]') ||
+      block.querySelector('[data-aue-label="Button Text"]') ||
+      block.querySelector('p');
 
-  // 3) Defensive: if an author pasted an <img> directly, convert to bg
-  const strayImg = block.querySelector(':scope > img');
-  if (strayImg && bgEl) {
-    bgEl.style.backgroundImage = `url("${strayImg.src}")`;
-    strayImg.remove();
+    const btnLinkEl =
+      block.querySelector('[data-aue-prop="btn-link"]') ||
+      block.querySelector('[data-aue-label="Button Link"]') ||
+      null;
+
+    // The asset picker usually inserts <picture><img> or <img> as the last child
+    const pictureEl = block.querySelector('picture, img');
+
+    // 2) Build structure
+    block.classList.add('primary-cta');
+
+    // Create content container (keeps editing working because we MOVE nodes, not replace text)
+    const content = document.createElement('div');
+    content.className = 'primary-cta__content';
+
+    if (titleEl) {
+      titleEl.classList.add('primary-cta__title'); // green style via CSS
+      content.appendChild(titleEl);
+    }
+
+    // Body: keep UE richtext editable but give it our display style
+    if (bodyEl) {
+      bodyEl.classList.add('primary-cta__body'); // large/bold black via CSS
+      content.appendChild(bodyEl);
+    }
+
+    // Build real button
+    const btn = document.createElement('a');
+    btn.className = 'primary-cta__button';
+    btn.href = '#';
+    btn.setAttribute('role', 'button');
+    btn.setAttribute('aria-label', 'Learn more');
+
+    // Set initial button text from UE field
+    const setBtnText = () => {
+      btn.textContent = (btnTextEl?.textContent || 'Learn more').trim();
+    };
+    setBtnText();
+
+    // Insert button; keep the raw link field (hidden by CSS) in the DOM for UE
+    content.appendChild(btn);
+
+    // White circle is CSS ::before on .primary-cta (no markup needed)
+
+    // 3) Move picture/image to be the "background"
+    if (pictureEl) {
+      pictureEl.classList.add('primary-cta__bg');
+      // Make sure it’s the first child so it can sit behind via CSS
+      block.prepend(pictureEl);
+    }
+
+    // 4) Insert content after the image
+    block.appendChild(content);
+
+    // 5) Sync button href from UE "Button Link" field
+    const syncHref = () => {
+      const url = (btnLinkEl?.textContent || '').trim();
+      if (url) btn.setAttribute('href', url);
+    };
+    syncHref();
+
+    if (btnLinkEl) {
+      const moLink = new MutationObserver(syncHref);
+      moLink.observe(btnLinkEl, {
+        childList: true, subtree: true, characterData: true, attributes: true,
+      });
+    }
+
+    // 6) Keep aria-label in sync with button text for a11y
+    const syncAria = () => {
+      btn.setAttribute('aria-label', btn.textContent.trim());
+    };
+    syncAria();
+
+    if (btnTextEl) {
+      const moText = new MutationObserver(() => { setBtnText(); syncAria(); });
+      moText.observe(btnTextEl, {
+        childList: true, subtree: true, characterData: true, attributes: true,
+      });
+    }
+
+  } catch (e) {
+    // Fail safe – never let the block crash rendering
+    // eslint-disable-next-line no-console
+    console.warn('primary-cta decorate failed (continuing):', e);
   }
 }
