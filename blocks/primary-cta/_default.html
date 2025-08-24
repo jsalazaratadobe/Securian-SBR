@@ -1,5 +1,7 @@
 <div class="primary-cta">
-  <!-- background layer is injected/normalized by JS -->
+  <!-- JS will normalize/create this bg element -->
+  <div class="primary-cta-bg" aria-hidden="true"></div>
+
   <div class="primary-cta-content-wrapper">
     <div class="primary-cta-content">
       <!-- Body field = big green headline -->
@@ -8,12 +10,12 @@
       <!-- Title field = smaller supporting copy -->
       <p class="primary-cta-body" data-rich-text="title">Short supporting sentence.</p>
 
-      <!-- Blue CTA button (text is editable); href is synced from the hidden span below -->
+      <!-- CTA button; text is editable, href is synced from hidden link field -->
       <a class="cta-button" href="#">
         <span data-rich-text="ctaText">Learn more</span>
       </a>
 
-      <!-- Keep UE’s editable URL, but hide it visually -->
+      <!-- Keep UE’s editable URL, but visually hide it -->
       <span class="sr-only" data-rich-text="ctaLink">/content/guidehouse/placeholders</span>
     </div>
   </div>
