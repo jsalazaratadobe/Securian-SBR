@@ -9,7 +9,8 @@
             "resourceType": "core/franklin/components/block/v1/block",
             "template": {
               "name": "Primary CTA",
-              "model": "primary-cta"
+              "model": "primary-cta",
+              "key-value": true
             }
           }
         }
@@ -20,22 +21,14 @@
     {
       "id": "primary-cta",
       "fields": [
-        {
-          "component": "text",
-          "name": "title",
-          "label": "Title",
-          "valueType": "string",
-          "richText": true,
-          "value": "Enter headline here"
-        },
-        {
-          "component": "text",
-          "name": "body",
-          "label": "Body",
-          "valueType": "string",
-          "richText": true,
-          "value": "Supporting description goes here."
-        },
-        {
-          "component": "text",
-          "name": "ctaText",
+        { "component": "text", "name": "title", "label": "Title", "valueType": "string", "richText": true, "value": "Enter headline here" },
+        { "component": "text", "name": "body", "label": "Body", "valueType": "string", "richText": true, "value": "Supporting description goes here." },
+        { "component": "text", "name": "ctaText", "label": "Button Text", "valueType": "string", "value": "Learn More" },
+        { "component": "text", "name": "ctaLink", "label": "Button Link", "valueType": "string", "value": "#" },
+        { "component": "reference", "name": "image", "label": "Background Image", "valueType": "string", "multi": false, "description": "Upload or select a background image" },
+        { "component": "text", "name": "alt", "label": "Image Alt Text", "valueType": "string", "value": "" }
+      ]
+    }
+  ],
+  "filters": []
+}
