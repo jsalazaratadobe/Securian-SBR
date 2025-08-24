@@ -1,111 +1,89 @@
 export default function decorate(block) {
-  // --- 0) tag the block ----------------------------------------------------
-  block.classList.add('primary-cta');
-
-  // --- 1) ensure a single background element ------------------------------
-  let bg = block.querySelector('.primary-cta-bg') ||
-           block.querySelector('.primary-cta-background');
-  if (!bg) {
-    bg = document.createElement('div');
-    bg.className = 'primary-cta-bg';
+  // Ensure background wrapper exists
+  if (!block.querySelector('.primary-cta-background')) {
+    const bg = document.createElement('div');
+    bg.className = 'primary-cta-background';
     block.prepend(bg);
   }
 
-  // convert any pasted inline image/picture to a CSS background
-  const pic = block.querySelector('picture, img');
-  if (pic) {
-    const img = pic.querySelector?.('img') || pic;
-    if (img?.src) bg.style.setProperty('--bg-url', `url("${img.src}")`);
-    pic.remove(); // critical: prevents the photo from covering the content
+  // Turn any leading <img> into a CSS background and remove it
+  const inlineImg = block.querySelector('img');
+  const bgEl = block.querySelector('.primary-cta-background');
+  if (inlineImg && bgEl) {
+    bgEl.style.setProperty('--bg-url', `url("${inlineImg.src}")`);
+    inlineImg.remove();
   }
 
-  // --- 2) locate UE fields -------------------------------------------------
-  const titleNode   = block.querySelector('[data-aue-prop="title"]');     // small line
-  const bodyNode    = block.querySelector('[data-aue-prop="body"]');      // big green H1
-  const btnTextNode = block.querySelector('[data-aue-prop="btn-text"]');  // button label
-  const btnLinkNode = block.querySelector('[data-aue-prop="btn-link"]');  // button URL (text)
-
-  // helper: clone a UE node into a new tag while preserving UE attributes
-  const promote = (node, tag, className) => {
+  // Utility to wrap an element into a new tag while keeping data-rich-text
+  function wrap(node, tag, cls) {
     if (!node) return null;
-    const el = document.createElement(tag);
-    // copy UE editing attributes so inline editing keeps working
-    [...node.attributes].forEach((a) => {
-      if (a.name.startsWith('data-aue-')) el.setAttribute(a.name, a.value);
-    });
-    el.className = className || '';
-    el.innerHTML = node.innerHTML;
-    node.replaceWith(el);
-    return el;
-  };
+    const wrapper = document.createElement(tag);
+    wrapper.className = cls;
+    wrapper.setAttribute('data-rich-text', node.dataset.richText || '');
+    wrapper.innerHTML = node.innerHTML;
+    node.replaceWith(wrapper);
+    return wrapper;
+  }
 
-  // --- 3) build semantic structure ----------------------------------------
-  const contentWrapper = document.createElement('div');
-  contentWrapper.className = 'primary-cta-content-wrapper';
+  // Grab fields
+  const titleNode = block.querySelector('[data-rich-text="title"]');
+  const bodyNode = block.querySelector('[data-rich-text="body"]');
+  const ctaTextNode = block.querySelector('[data-rich-text="ctaText"]');
+  const ctaLinkNode = block.querySelector('[data-rich-text="ctaLink"]');
 
+  // Content container
   const content = document.createElement('div');
   content.className = 'primary-cta-content';
-  contentWrapper.appendChild(content);
-  block.appendChild(contentWrapper);
 
-  // small/top line (optional) -> styled paragraph
-  if (titleNode) {
-    const small = promote(titleNode, 'p', 'primary-cta-body');
-    content.appendChild(small);
+  // Title is the big green heading
+  if (titleNode && !titleNode.parentElement?.classList.contains('primary-cta-title')) {
+    const h2 = wrap(titleNode, 'h2', 'primary-cta-title');
+    content.appendChild(h2);
   }
 
-  // main big headline -> <h2> in securian green
-  if (bodyNode) {
-    const h = promote(bodyNode, 'h2', 'primary-cta-title');
-    content.appendChild(h);
+  // Body is the smaller line
+  if (bodyNode && !bodyNode.parentElement?.classList.contains('primary-cta-body')) {
+    const p = wrap(bodyNode, 'p', 'primary-cta-body');
+    content.appendChild(p);
   }
 
-  // button
-  if (btnTextNode) {
-    const a = document.createElement('a');
-    a.className = 'cta-button';
-    a.href = '#'; // will be synced below
+  // CTA button
+  if (ctaTextNode || ctaLinkNode) {
+    const button = document.createElement('a');
+    button.className = 'cta-button';
+    button.href = (ctaLinkNode?.textContent || '#').trim();
+    button.textContent = (ctaTextNode?.textContent || 'Learn More').trim();
+    button.setAttribute('role', 'button');
+    content.appendChild(button);
 
-    // move the UE text node inside the button as a <span> (preserve edit attrs)
-    const span = document.createElement('span');
-    [...btnTextNode.attributes].forEach((a2) => {
-      if (a2.name.startsWith('data-aue-')) span.setAttribute(a2.name, a2.value);
-    });
-    span.innerHTML = btnTextNode.innerHTML;
-    btnTextNode.replaceWith(a);
-    a.appendChild(span);
-    content.appendChild(a);
-  }
-
-  // keep the link field present for UE but visually hidden
-  if (btnLinkNode) btnLinkNode.classList.add('sr-only');
-
-  // --- 4) sync button href + aria-live to editor changes -------------------
-  const linkSpan = btnLinkNode;
-  const ctaButton = block.querySelector('.cta-button');
-  const syncHref = () => {
-    if (!linkSpan || !ctaButton) return;
-    const v = (linkSpan.textContent || '').trim();
-    if (v) ctaButton.setAttribute('href', v);
-  };
-  syncHref();
-  if (linkSpan) {
-    new MutationObserver(syncHref).observe(linkSpan, {
-      childList: true, subtree: true, characterData: true,
-    });
-  }
-
-  // keep aria-label aligned with visible button text
-  const ctaTextSpan = ctaButton?.querySelector('[data-aue-prop="btn-text"]');
-  const syncAria = () => {
-    if (ctaButton && ctaTextSpan) {
-      ctaButton.setAttribute('aria-label', ctaTextSpan.textContent.trim());
+    // Sync link text changes → button href
+    if (ctaLinkNode) {
+      const syncHref = () => {
+        const url = (ctaLinkNode.textContent || '').trim();
+        if (url) button.setAttribute('href', url);
+      };
+      syncHref();
+      const mo = new MutationObserver(syncHref);
+      mo.observe(ctaLinkNode, { childList: true, subtree: true, characterData: true });
     }
-  };
-  syncAria();
-  if (ctaTextSpan) {
-    new MutationObserver(syncAria).observe(ctaTextSpan, {
-      childList: true, subtree: true, characterData: true,
-    });
+
+    // Sync button label changes → aria-label
+    if (ctaTextNode) {
+      const syncText = () => {
+        const label = (ctaTextNode.textContent || '').trim();
+        if (label) {
+          button.textContent = label;
+          button.setAttribute('aria-label', label);
+        }
+      };
+      syncText();
+      const mo2 = new MutationObserver(syncText);
+      mo2.observe(ctaTextNode, { childList: true, subtree: true, characterData: true });
+    }
   }
+
+  // Replace block content with bg + content
+  block.innerHTML = '';
+  block.append(bgEl, content);
+  block.classList.add('primary-cta');
 }
