@@ -1,17 +1,23 @@
-/* Primary CTA — demo-ready styling that works with UE fields */
+/* Primary CTA — clean, consolidated, demo-ready */
 
+/* --- Container ------------------------------------------------------------ */
 .primary-cta {
   position: relative;
-  overflow: hidden;
-  /* Keep the hero below the sticky header on public page */
-  margin-top: var(--nav-height, 96px);
-  /* Visual spacing in UE too */
-  padding: clamp(24px, 4vw, 48px) clamp(16px, 3vw, 40px);
-  min-height: 520px;
-  isolation: isolate; /* lets the circle layer cleanly */
+  overflow: hidden;                         /* clips the white circle cleanly  */
+  margin-top: var(--nav-height, 96px);      /* stay clear of sticky header     */
+  padding: clamp(20px, 3vw, 36px) clamp(16px, 3vw, 40px);
+  min-height: clamp(380px, 42vw, 560px);    /* responsive band height          */
+  isolation: isolate;                       /* lets ::before layer sit nicely  */
+  background-repeat: no-repeat;
+  background-position: center right;        /* adjust if you want more face    */
+  background-size: cover;
 }
 
-/* Background image: use the real <picture>/<img> from UE as a bg layer */
+/* Keep the hero below a sticky header on public pages too */
+:where(header)+main .primary-cta { margin-top: var(--nav-height, 96px); }
+
+/* --- Background image layer ---------------------------------------------- */
+/* Use the real UE <picture>/<img> (or a JS-injected div) as the bg layer */
 .primary-cta > picture,
 .primary-cta > img,
 .primary-cta .primary-cta__bg {
@@ -25,30 +31,41 @@
   opacity: 1;
 }
 
-/* White circle overlay */
+/* --- White circle overlay ------------------------------------------------- */
 .primary-cta::before {
   content: "";
   position: absolute;
   z-index: 1;
-  /* tweak these to taste */
-  left: clamp(-140px, -8vw, -80px);
-  top: clamp(40px, 6vw, 80px);
-  width: clamp(420px, 45vw, 720px);
-  aspect-ratio: 1/1;
+  /* laptop/desktop sweet spot; adjust if desired */
+  top: -76px;
+  left: -155px;
+  width: 700px;
+  height: 700px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.92);
-  /* soft edge similar to securian.com */
-  box-shadow: 0 0 0 1px rgba(255,255,255,.7) inset, 0 8px 32px rgba(0,0,0,0.06);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.7) inset,
+    0 8px 32px rgba(0,0,0,0.06);
 }
 
-/* Content sits above circle and image */
+/* keep it well-behaved in smaller widths */
+@media (max-width: 1024px){
+  .primary-cta::before{
+    top: -48px;
+    left: -110px;
+    width: 560px;
+    height: 560px;
+  }
+}
+
+/* --- Content -------------------------------------------------------------- */
 .primary-cta__content {
   position: relative;
-  z-index: 2;
+  z-index: 2;                               /* above bg + circle               */
   max-width: clamp(520px, 48vw, 720px);
 }
 
-/* Title: green, bold (H1 style) */
+/* Title: Securian green, bold (H1) */
 .primary-cta__title {
   color: #007a33;
   font-weight: 800;
@@ -57,7 +74,7 @@
   font-size: clamp(28px, 4.4vw, 64px);
 }
 
-/* Body: bold, black (H2 style) but keep UE richtext inline */
+/* Body: bold, black (H2 look) */
 .primary-cta__body {
   color: #0b1f18;
   font-weight: 700;
@@ -70,7 +87,7 @@
   font: inherit;
 }
 
-/* Button */
+/* --- Button --------------------------------------------------------------- */
 .primary-cta__button {
   display: inline-flex;
   align-items: center;
@@ -88,18 +105,7 @@
 .primary-cta__button:hover { background: #005aa9; transform: translateY(-1px); }
 .primary-cta__button:active { transform: translateY(0); }
 
-/* Hide the raw link text field the UE shows */
-[data-aue-prop="btn-link"], [data-aue-label="Button Link"] {
-  display: none !important;
-}
-
-/* Make sure public page has breathing room under the sticky header */
-:where(header)+main .primary-cta { margin-top: var(--nav-height, 96px); }
-
-/* UE canvas tag and breadcrumbs won’t be affected */
-/* --- FINAL TWEAKS -------------------------------------------------- */
-
-/* 1) Force the CTA button to Securian blue (beat any site-wide link styles) */
+/* Beat any site-wide link styles */
 .primary-cta .primary-cta__button {
   background: #0067c5 !important;
   color: #fff !important;
@@ -107,66 +113,14 @@
   text-decoration: none !important;
   box-shadow: 0 2px 0 rgba(0,0,0,.15) !important;
 }
-.primary-cta .primary-cta__button:hover {
-  background: #005aa9 !important;
-}
+.primary-cta .primary-cta__button:hover { background: #005aa9 !important; }
 
-/* Hide the raw on-canvas "Button Text" field node so only the real button shows.
-   (You still edit Button Text in the right rail form.) */
+/* --- UE niceties ---------------------------------------------------------- */
+/* Hide the raw on-canvas “Button Text” and “Button Link” nodes;
+   you still edit them in the right-rail form. */
 .primary-cta [data-aue-prop="btn-text"],
-.primary-cta [data-aue-label="Button Text"] {
+.primary-cta [data-aue-label="Button Text"],
+[data-aue-prop="btn-link"],
+[data-aue-label="Button Link"] {
   display: none !important;
 }
-
-/* 2) Circle placement/size fine-tune (align better with your title) */
-.primary-cta::before {
-  /* Nudge a touch right and up, slightly smaller */
-  left: clamp(-110px, -6vw, -60px);
-  top: clamp(16px, 3vw, 36px);
-  width: clamp(380px, 40vw, 660px);
-}
-
-/* Optional: tighten top spacing a bit (keeps it clear of sticky header) */
-.primary-cta { padding-top: clamp(20px, 3vw, 36px); }
-/* fine-tune the white circle placement */
-.primary-cta::before{
-  /* move a touch up & left and make it a hair larger */
-  top: -68px;          /* was around -40 → lift more */
-  left: -140px;        /* push further left so it hugs the edge */
-  width: 680px;        /* slightly larger so it cradles the H1 */
-  height: 680px;
-}
-
-/* laptop-ish tuning (common author viewport) */
-@media (min-width: 1100px) and (max-width: 1440px){
-  .primary-cta::before{
-    top: -76px;
-    left: -155px;
-    width: 700px;
-    height: 700px;
-  }
-}
-
-/* keep it well-behaved in smaller widths */
-@media (max-width: 1024px){
-  .primary-cta::before{
-    top: -48px;
-    left: -110px;
-    width: 560px;
-    height: 560px;
-  }
-}
-/* Make the hero a tidy, responsive strip and clip overflow */
-.primary-cta{
-  position: relative;
-  overflow: hidden;                         /* cuts the circle cleanly */
-  min-height: clamp(380px, 42vw, 560px);    /* responsive height sweet spot */
-  background-size: cover;                   /* keeps the image filling the box */
-  background-position: center right;        /* nudge as you like: center/60% 50%/etc. */
-  background-repeat: no-repeat;
-}
-
-/* If there is still any accidental extra bottom space, kill it decisively */
-.primary-cta { padding-bottom: 0; }
-
-/* circle placement you already tuned can stay as-is */
