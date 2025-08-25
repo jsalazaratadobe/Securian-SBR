@@ -156,3 +156,17 @@
     height: 560px;
   }
 }
+/* Make the hero a tidy, responsive strip and clip overflow */
+.primary-cta{
+  position: relative;
+  overflow: hidden;                         /* cuts the circle cleanly */
+  min-height: clamp(380px, 42vw, 560px);    /* responsive height sweet spot */
+  background-size: cover;                   /* keeps the image filling the box */
+  background-position: center right;        /* nudge as you like: center/60% 50%/etc. */
+  background-repeat: no-repeat;
+}
+
+/* If there is still any accidental extra bottom space, kill it decisively */
+.primary-cta { padding-bottom: 0; }
+
+/* circle placement you already tuned can stay as-is */
