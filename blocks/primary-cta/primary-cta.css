@@ -97,3 +97,34 @@
 :where(header)+main .primary-cta { margin-top: var(--nav-height, 96px); }
 
 /* UE canvas tag and breadcrumbs won’t be affected */
+/* --- FINAL TWEAKS -------------------------------------------------- */
+
+/* 1) Force the CTA button to Securian blue (beat any site-wide link styles) */
+.primary-cta .primary-cta__button {
+  background: #0067c5 !important;
+  color: #fff !important;
+  border: 0 !important;
+  text-decoration: none !important;
+  box-shadow: 0 2px 0 rgba(0,0,0,.15) !important;
+}
+.primary-cta .primary-cta__button:hover {
+  background: #005aa9 !important;
+}
+
+/* Hide the raw on-canvas "Button Text" field node so only the real button shows.
+   (You still edit Button Text in the right rail form.) */
+.primary-cta [data-aue-prop="btn-text"],
+.primary-cta [data-aue-label="Button Text"] {
+  display: none !important;
+}
+
+/* 2) Circle placement/size fine-tune (align better with your title) */
+.primary-cta::before {
+  /* Nudge a touch right and up, slightly smaller */
+  left: clamp(-110px, -6vw, -60px);
+  top: clamp(16px, 3vw, 36px);
+  width: clamp(380px, 40vw, 660px);
+}
+
+/* Optional: tighten top spacing a bit (keeps it clear of sticky header) */
+.primary-cta { padding-top: clamp(20px, 3vw, 36px); }
