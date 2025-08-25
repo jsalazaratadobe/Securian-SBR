@@ -1,16 +1,16 @@
 {
   "mappings": [
-    "/content/securian/language-masters/en:/",
-    "/content/securian/language-masters/en/:/",
-    "/content/securian/language-masters/en/:/en/",
-    "/content/securian/configuration:/.helix/config.json",
-    "/content/securian/metadata:/metadata.json",
-    "/content/securian/redirects:/redirects.json",
-    "/content/securian/placeholders:/placeholders.json",
-    "/content/securian.resource/language-masters/en/query-index.json:/en/query-index.json"
+    "/content/securian-sbr/language-masters/en:/",
+    "/content/securian-sbr/language-masters/en/:/",
+    "/content/securian-sbr/language-masters/en/:/en/",
+    "/content/securian-sbr/configuration:/.helix/config.json",
+    "/content/securian-sbr/metadata:/metadata.json",
+    "/content/securian-sbr/redirects:/redirects.json",
+    "/content/securian-sbr/placeholders:/placeholders.json",
+    "/content/securian-sbr.resource/language-masters/en/query-index.json:/en/query-index.json"
   ],
   "includes": [
-    "/content/securian/",
-    "/content/dam/securian/"
+    "/content/securian-sbr/",
+    "/content/dam/securian-sbr/"
   ]
 }
