@@ -1,23 +1,28 @@
-/* Primary CTA — clean, consolidated, demo-ready */
+/* Primary CTA — final polish */
 
 /* --- Container ------------------------------------------------------------ */
 .primary-cta {
   position: relative;
-  overflow: hidden;                         /* clips the white circle cleanly  */
-  margin-top: var(--nav-height, 96px);      /* stay clear of sticky header     */
+  /* robust clipping in UE and on published pages */
+  overflow: hidden;
+  clip-path: inset(0);            /* extra guard for some wrappers */
+  contain: paint;                 /* isolate paint/stacking */
+
+  /* keep clear of sticky header on published pages */
+  margin-top: var(--nav-height, 96px);
+
   padding: clamp(20px, 3vw, 36px) clamp(16px, 3vw, 40px);
-  min-height: clamp(380px, 42vw, 560px);    /* responsive band height          */
-  isolation: isolate;                       /* lets ::before layer sit nicely  */
+  min-height: clamp(380px, 42vw, 560px);    /* responsive band height */
   background-repeat: no-repeat;
-  background-position: center right;        /* adjust if you want more face    */
+  background-position: center right;
   background-size: cover;
+  isolation: isolate;
 }
 
-/* Keep the hero below a sticky header on public pages too */
+/* If the site uses a <header> that’s sticky, ensure spacing */
 :where(header)+main .primary-cta { margin-top: var(--nav-height, 96px); }
 
 /* --- Background image layer ---------------------------------------------- */
-/* Use the real UE <picture>/<img> (or a JS-injected div) as the bg layer */
 .primary-cta > picture,
 .primary-cta > img,
 .primary-cta .primary-cta__bg {
@@ -28,19 +33,18 @@
   object-fit: cover !important;
   z-index: 0 !important;
   pointer-events: none;
-  opacity: 1;
 }
 
 /* --- White circle overlay ------------------------------------------------- */
+/* Nudged up/left a touch so it doesn’t crowd the first letter */
 .primary-cta::before {
   content: "";
   position: absolute;
   z-index: 1;
-  /* laptop/desktop sweet spot; adjust if desired */
-  top: -76px;
-  left: -155px;
-  width: 700px;
-  height: 700px;
+  top: -92px;           /* was -76px */
+  left: -175px;         /* was -155px */
+  width: 720px;         /* was 700px */
+  height: 720px;        /* was 700px */
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.92);
   box-shadow:
@@ -48,13 +52,12 @@
     0 8px 32px rgba(0,0,0,0.06);
 }
 
-/* keep it well-behaved in smaller widths */
 @media (max-width: 1024px){
   .primary-cta::before{
-    top: -48px;
-    left: -110px;
-    width: 560px;
-    height: 560px;
+    top: -56px;         /* up a smidge at tablet */
+    left: -120px;
+    width: 580px;
+    height: 580px;
   }
 }
 
@@ -105,7 +108,7 @@
 .primary-cta__button:hover { background: #005aa9; transform: translateY(-1px); }
 .primary-cta__button:active { transform: translateY(0); }
 
-/* Beat any site-wide link styles */
+/* Beat any global link overrides */
 .primary-cta .primary-cta__button {
   background: #0067c5 !important;
   color: #fff !important;
@@ -116,8 +119,7 @@
 .primary-cta .primary-cta__button:hover { background: #005aa9 !important; }
 
 /* --- UE niceties ---------------------------------------------------------- */
-/* Hide the raw on-canvas “Button Text” and “Button Link” nodes;
-   you still edit them in the right-rail form. */
+/* Hide raw “Button Text/Link” nodes on canvas; edit in right rail */
 .primary-cta [data-aue-prop="btn-text"],
 .primary-cta [data-aue-label="Button Text"],
 [data-aue-prop="btn-link"],
